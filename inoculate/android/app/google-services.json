@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "831325880216",
+    "firebase_url": "https://fake-news-inoculation-game-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fake-news-inoculation-game",
+    "storage_bucket": "fake-news-inoculation-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831325880216:android:fcc805b9ce2124ec1c35ed",
+        "android_client_info": {
+          "package_name": "com.sebastiankjallgren.inoculate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZWQLFHp4o0Vp56E9KUBqWAiBTP7Uip6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
