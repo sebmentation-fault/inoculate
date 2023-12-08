@@ -19,8 +19,8 @@ class _SignInFormState extends State<SignInForm> {
     return Form(
       child: Column(
         children: [
-          const Text("Sign In:"),
-          const SizedBox(height: 20),
+          Text("Sign In:", style: Theme.of(context).textTheme.headlineLarge),
+          const SizedBox(height: 40),
           const Text("Input your email:"),
           const SizedBox(height: 20),
           TextFormField(

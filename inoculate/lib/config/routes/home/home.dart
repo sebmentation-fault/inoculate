@@ -78,8 +78,8 @@ class _HomeState extends State<Home> {
                   _selectedIndex = index;
                 });
               },
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              indicatorColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              indicatorColor: Theme.of(context).colorScheme.primaryContainer,
             ),
           Column(
             children: [

@@ -22,8 +22,9 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
     return Form(
       child: Column(
         children: [
-          const Text("Create an Account:"),
-          const SizedBox(height: 20),
+          Text("Create an account:",
+              style: Theme.of(context).textTheme.headlineLarge),
+          const SizedBox(height: 40),
           const Text("Input your email:"),
           const SizedBox(height: 20),
           TextFormField(
@@ -31,7 +32,7 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
               // TODO: check if email has suitable format
               setState(() {
                 _email = e;
-                _emailIsValid = e.contains('@');
+                _emailIsValid = e.contains('@') && e.contains('.');
                 _accountIsValid = _emailIsValid && _passwordsMatch;
               });
             },
