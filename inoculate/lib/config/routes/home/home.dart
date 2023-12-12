@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 import 'package:inoculate/utils/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +21,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthService _authService = AuthService();
-
   final int _minScreenSize = 640;
 
   int _selectedIndex = 1;
@@ -81,20 +80,7 @@ class _HomeState extends State<Home> {
               backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               indicatorColor: Theme.of(context).colorScheme.primaryContainer,
             ),
-          Column(
-            children: [
-              Text("Your UID: $greeting"),
-              ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await _authService.signOut();
-                    } on AuthenticationException catch (e) {
-                      // TODO: show error dialog
-                    }
-                  },
-                  child: const Text("Sign Out")),
-            ],
-          ),
+          TacticExplaination(),
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
