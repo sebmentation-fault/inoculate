@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/modules/home_navigation/navigation_bar.dart';
+import 'package:inoculate/modules/home_navigation/navigation_rail.dart';
 import 'package:inoculate/modules/lesson_snippet/incorrect_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
@@ -24,57 +26,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: MediaQuery.of(context).size.width <
-              navigationRailScreenWidth
-          ? BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.library_books), label: 'Courses'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings), label: 'Settings'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.manage_accounts), label: 'Profile'),
-              ],
-              onTap: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              unselectedItemColor: Theme.of(context).colorScheme.secondary,
-            )
-          : null,
+      bottomNavigationBar:
+          MediaQuery.of(context).size.width < navigationRailScreenWidth
+              ? buildBottomNavigationBar(context)
+              : null,
       body: Row(
         children: [
           if (MediaQuery.of(context).size.width >= navigationRailScreenWidth)
-            NavigationRail(
-              destinations: const [
-                NavigationRailDestination(
-                    icon: Icon(Icons.home), label: Text('Home')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.library_books), label: Text('Courses')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.settings), label: Text('Settings')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.manage_accounts), label: Text('Profile')),
-              ],
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-              indicatorColor: Theme.of(context).colorScheme.primaryContainer,
-            ),
+            buildNavigationRail(context),
           //const OptionSelection(
           //  answerIndex: 0,
           //),

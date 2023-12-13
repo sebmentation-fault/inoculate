@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:inoculate/config/wrappers/auth/auth.dart';
+import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/core/states/route_state.dart';
 import 'package:inoculate/utils/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -20,18 +22,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService auth = AuthService();
 
-    // Wrapped such that we can make use of the user globally.
     return MultiProvider(
       providers: [
-        StreamProvider<User?>.value(value: auth.user, initialData: null)
+        StreamProvider<User?>.value(value: auth.user, initialData: null),
+        ChangeNotifierProvider(create: ((context) => RouteState()))
       ],
       child: MaterialApp(
-        title: 'Inoculate',
+        title: appName,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: AuthWrapper(),
+        home: const AuthWrapper(),
       ),
     );
   }
