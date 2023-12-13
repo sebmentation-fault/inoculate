@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inoculate/modules/lesson_snippet/incorrect_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 import 'package:inoculate/utils/services/auth.dart';
@@ -81,12 +82,13 @@ class _HomeState extends State<Home> {
               backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               indicatorColor: Theme.of(context).colorScheme.primaryContainer,
             ),
-          const OptionSelection(
-            answerIndex: 0,
-          ),
+          //const OptionSelection(
+          //  answerIndex: 0,
+          //),
           //TacticExplaination(
           //  tacticExplaination: "# Hello",
           //),
+          const IncorrectSelection(),
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
