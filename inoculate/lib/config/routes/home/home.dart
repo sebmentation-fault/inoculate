@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/modules/lesson_snippet/incorrect_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
@@ -16,28 +17,20 @@ import 'package:provider/provider.dart';
 /// displays a Bottom Navigation Bar on small screens (< `x`px) and a
 /// Navigation Rail on larger screens (> `x`px).
 class Home extends StatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final int _minScreenSize = 640;
-
   int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<User?>(context);
-    String greeting = "No UID";
-
-    if (user != null) {
-      greeting = user.uid;
-    }
-
     return Scaffold(
-      bottomNavigationBar: MediaQuery.of(context).size.width < _minScreenSize
+      bottomNavigationBar: MediaQuery.of(context).size.width <
+              navigationRailScreenWidth
           ? BottomNavigationBar(
               currentIndex: _selectedIndex,
               items: const [
@@ -61,7 +54,7 @@ class _HomeState extends State<Home> {
           : null,
       body: Row(
         children: [
-          if (MediaQuery.of(context).size.width >= _minScreenSize)
+          if (MediaQuery.of(context).size.width >= navigationRailScreenWidth)
             NavigationRail(
               destinations: const [
                 NavigationRailDestination(

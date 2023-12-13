@@ -1,5 +1,9 @@
 const String appName = "Inoculate";
 
+/// Constant that defines at what screen width the bottom navigation bar should
+/// become a navigation rail
+const double navigationRailScreenWidth = 640;
+
 /// Define default explainations for `LessonSnippets`
 const String defaultTacticExplaination = """
 # Error
