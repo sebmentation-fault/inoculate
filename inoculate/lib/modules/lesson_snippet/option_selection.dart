@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 
 /// Provides the screen in which a user selects an option.
@@ -33,18 +34,11 @@ class _OptionSelectionState extends State<OptionSelection> {
   late bool showNotSure;
   late List<Widget> options = [];
 
-  final String placeholderInformation = """
-  # Example Option Selection
-
-  imagine that the following was a headline, or a social media post for that 
-  matter.
-  """;
-
   @override
   void initState() {
     super.initState();
 
-    information = widget.information ?? placeholderInformation;
+    information = widget.information ?? defualtOptionSelection;
     showNotSure = widget.showNotSure ?? true;
     answerIndex = widget.answerIndex;
 
@@ -81,7 +75,7 @@ class _OptionSelectionState extends State<OptionSelection> {
     return Column(
       children: [
         InformationCard(
-          data: widget.information,
+          data: information,
         ),
         Row(children: options),
       ],

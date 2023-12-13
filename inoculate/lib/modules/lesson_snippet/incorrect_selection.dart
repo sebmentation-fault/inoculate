@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 
 class IncorrectSelection extends StatefulWidget {
+  final String? incorrectSelectionMessage;
   final String? feedback;
-  static const String incorrectMessage = "# Incorrect Selection!\n";
 
-  const IncorrectSelection({super.key, this.feedback});
+  const IncorrectSelection(
+      {super.key, this.incorrectSelectionMessage, this.feedback});
 
   @override
   State<IncorrectSelection> createState() => _IncorrectSelectionState();
@@ -14,8 +16,9 @@ class IncorrectSelection extends StatefulWidget {
 class _IncorrectSelectionState extends State<IncorrectSelection> {
   @override
   Widget build(BuildContext context) {
-    String message = IncorrectSelection.incorrectMessage +
-        (widget.feedback ?? "There was a more optimal selection to have made.");
+    String message =
+        (widget.incorrectSelectionMessage ?? defaultIncorrectSelection) +
+            (widget.feedback ?? defualtFeedback);
 
     return Column(
       children: [

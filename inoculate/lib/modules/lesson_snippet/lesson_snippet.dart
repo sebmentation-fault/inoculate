@@ -5,49 +5,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 ///
 /// It displays content that is provided as a Markdown string.
 class InformationCard extends StatefulWidget {
-  static const String defaultExplaination = """
-  # Error on our side!
+  final String data;
 
-  Sorry, we were not able to fetch the explaination for this `Lesson`. We will
-  attempt to fix this as soon as possible.
-
-  ---
-
-  #### Note:
-
-  It could be worth checking your internet connectivity/firewall settings, as 
-  these could prevent `Inoculate` from loading the messages from our server.
-
-  --- 
-
-  # Testing/Debugging:
-
-  The following should all work.
-
-  Lists:
-
-   * item
-   * another item
-   * one more
-  
-  Enumerated lists:
-
-   1. item
-      
-      continuation of item
-
-   2. another item
-   3. one more
-
-   Displaying an image:
-
-   ![Local Image](resource://assets/images/royalty-free-fake-news-image.jpg)
-  """;
-  static const String exExp = "# Error!";
-
-  final String? data;
-
-  const InformationCard({super.key, this.data});
+  const InformationCard({super.key, required this.data});
 
   @override
   State<InformationCard> createState() => _InformationCardState();
@@ -55,13 +15,10 @@ class InformationCard extends StatefulWidget {
 
 class _InformationCardState extends State<InformationCard> {
   final int _minScreenSize = 640;
-  late String data;
 
   @override
   void initState() {
     super.initState();
-
-    data = widget.data ?? InformationCard.defaultExplaination;
   }
 
   @override
@@ -81,7 +38,7 @@ class _InformationCardState extends State<InformationCard> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: MarkdownBody(
-              data: data,
+              data: widget.data,
               styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
             ),
           ),
