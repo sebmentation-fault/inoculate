@@ -23,16 +23,6 @@ class _AuthState extends State<Auth> {
         child: SizedBox(
           child: Column(
             children: [
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _showSignIn = !_showSignIn;
-                    });
-                  },
-                  child: _showSignIn
-                      ? const Text("Go to Create Account From")
-                      : const Text("Go to Sign In Form")),
-              const SizedBox(height: 40),
               SizedBox(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -45,6 +35,17 @@ class _AuthState extends State<Auth> {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 40),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showSignIn = !_showSignIn;
+                  });
+                },
+                child: _showSignIn
+                    ? const Text("Don't have an account yet? Create one")
+                    : const Text("Already have an account? Sign in"),
               ),
             ],
           ),
