@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 
 const List<NavigationRoute> navigationRoutes = [
@@ -6,7 +7,9 @@ const List<NavigationRoute> navigationRoutes = [
   NavigationRoute(
     label: "Courses",
     icon: Icon(Icons.golf_course),
-    widget: TacticExplaination(),
+    widget: OptionSelection(
+      answerIndex: 0,
+    ),
   ),
   NavigationRoute(label: "Settings", icon: Icon(Icons.settings)),
   NavigationRoute(label: "Profile", icon: Icon(Icons.manage_accounts)),
