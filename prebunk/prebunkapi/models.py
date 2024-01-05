@@ -101,8 +101,8 @@ class OptionSelectionModel(models.Model):
 
     id = models.AutoField(primary_key=True)
     information = models.TextField()
-    correct_option = models.CharField(max_length=256)
-    incorrect_option = models.CharField(max_length=256)
+    correct_option = models.TextField()
+    incorrect_option = models.TextField()
     display_not_sure = models.BooleanField()
     decieved_feedback = models.TextField()
     skepical_feedback = models.TextField()
