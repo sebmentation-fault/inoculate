@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
-import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 
 const List<NavigationRoute> navigationRoutes = [
   NavigationRoute(label: "Home", icon: Icon(Icons.home)),
