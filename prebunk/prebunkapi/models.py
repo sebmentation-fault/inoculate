@@ -18,7 +18,10 @@ class DisinformationTacticModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return str(self.name)
+        """
+        Return: The first 50 characters of the disinformation_tactic name
+        """
+        return str(self.name)[0:50]
 
 
 class LessonModel(models.Model):
@@ -54,7 +57,13 @@ class LessonModel(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f'Lesson on "{self.disinformation_tactic}" for {self.user}'
+        """
+        Return: The first 10 characters of user and the first 35 of the disinformation_tactic
+        """
+        u = str(self.user)[0:10]
+        dt = str(self.disinformation_tactic)[0:35]
+        msg = f'{u} - {dt}'
+        return msg
 
 
 # Lesson Modules
@@ -81,7 +90,13 @@ class TacticExplainationModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f'{self.disinformation_tactic}: {self.explaination}'
+        """
+        Return: The first 10 characters of the disinformation_tactic and the first 35 of the explaination.
+        """
+        dt = str(self.disinformation_tactic)[0:10]
+        e = str(self.explaination)[35]
+        msg = f'{dt} - {e}'
+        return msg
 
 
 class OptionSelectionModel(models.Model):
@@ -110,7 +125,10 @@ class OptionSelectionModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f'Information: {self.information}'
+        """
+        Return: The first 50 characters of the OptionSelectionModel's information.
+        """
+        return str(self.information)[0:50]
 
 
 class OptionSelectionTacticModel(models.Model):
