@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:inoculate/constants/app_constants.dart';
 
 /// Class that encapsulates displaying information.
 ///
@@ -14,12 +15,7 @@ class InformationCard extends StatefulWidget {
 }
 
 class _InformationCardState extends State<InformationCard> {
-  final int _minScreenSize = 640;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final double _minScreenSize = navigationRailScreenWidth;
 
   @override
   Widget build(BuildContext context) {

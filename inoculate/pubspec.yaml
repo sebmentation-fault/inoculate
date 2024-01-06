@@ -16,7 +16,16 @@ dependencies:
 
   # We use the provider package to make auth changes more easily accessible across the application
   provider: ^6.1.1
+
+  # Markdown packages take markdown text as input and turn them into beautiful widgets
   flutter_markdown: ^0.6.18+2
+
+  # The HTTP package let's us make HTTP API calls
+  http: ^1.1.2
+
+  # JSON packages to annotate and serialize
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
 
 dev_dependencies:
   flutter_test:
