@@ -37,8 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'prebunkapi',
+
+    # The app
+    'prebunkapi.apps.PrebunkapiConfig',
+
+    # Exposes a RESTful API
     'rest_framework',
+
+    # Django CORS headers allows the frontend to communicate with the backend
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +56,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Django CORS headers allows the frontend to communicate with the backend
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'prebunk.urls'
@@ -124,14 +134,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST framework
+# ------------------ REST framework ------------------------
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'prebunkapi.backend.FirebaseBackend',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAdminUser',
     ],
 }
+
+# ------------------ CORS Headers ------------------------
+
+CORS_ALLOW_ALL_ORIGINS = True

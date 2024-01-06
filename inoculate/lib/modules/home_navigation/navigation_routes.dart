@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
+import 'package:inoculate/widgets/api_routes.dart';
 
 const List<NavigationRoute> navigationRoutes = [
-  NavigationRoute(label: "Home", icon: Icon(Icons.home)),
+  NavigationRoute(
+    label: "Home",
+    icon: Icon(Icons.home),
+    widget: ApiRoutes(),
+  ),
   NavigationRoute(
     label: "Courses",
     icon: Icon(Icons.golf_course),
