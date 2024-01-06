@@ -143,34 +143,6 @@ def getDisinformationTactics(request):
 
     tactics = DisinformationTacticModel.objects.all()
     serializer = DisinformationTacticSerializer(tactics, many=True)
+
     return Response(serializer.data)
 
-
-
-class DisinformationTacticListCreateView(APIView):
-    def get(self, request, *args, **kwargs):
-        pass
-
-    def post(self, request, *args, **kwargs):
-        pass
-
-class DisinformationTacticDetailView(APIView):
-    def delete(self, request, arg, *args, **kwargs):
-        pass
-
-    def get_object(self, pk):
-        pass
-
-class TacticExplanationListCreateView(APIView):
-    def get(self, request, *args, **kwargs):
-        pass
-
-    def post(self, request, *args, **kwargs):
-        pass
-
-class OptionSelectionListCreateView(APIView):
-    def get(self, request, *args, **kwargs):
-        pass
-
-    def post(self, request, *args, **kwargs):
-        pass
