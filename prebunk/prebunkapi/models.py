@@ -95,7 +95,7 @@ class TacticExplainationModel(models.Model):
         """
         dt = str(self.disinformation_tactic)[0:45]
         e = str(self.explaination)[0:100]
-        msg = f'{dt} - {e}'
+        msg = f'[{dt}] {e}'
         return msg
 
 
