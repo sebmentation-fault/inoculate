@@ -19,9 +19,9 @@ class DisinformationTacticModel(models.Model):
 
     def __str__(self) -> str:
         """
-        Return: The first 50 characters of the disinformation_tactic name
+        Return: The first 150 characters of the disinformation_tactic name
         """
-        return str(self.name)[0:50]
+        return str(self.name)[0:150]
 
 
 class LessonModel(models.Model):
@@ -58,10 +58,10 @@ class LessonModel(models.Model):
 
     def __str__(self) -> str:
         """
-        Return: The first 10 characters of user and the first 35 of the disinformation_tactic
+        Return: The first 45 characters of user and the first 100 of the disinformation_tactic
         """
-        u = str(self.user)[0:10]
-        dt = str(self.disinformation_tactic)[0:35]
+        u = str(self.user)[0:45]
+        dt = str(self.disinformation_tactic)[0:100]
         msg = f'{u} - {dt}'
         return msg
 
@@ -91,10 +91,10 @@ class TacticExplainationModel(models.Model):
 
     def __str__(self) -> str:
         """
-        Return: The first 10 characters of the disinformation_tactic and the first 35 of the explaination.
+        Return: The first 45 characters of the disinformation_tactic and the first 100 of the explaination.
         """
-        dt = str(self.disinformation_tactic)[0:10]
-        e = str(self.explaination)[35]
+        dt = str(self.disinformation_tactic)[0:45]
+        e = str(self.explaination)[0:100]
         msg = f'{dt} - {e}'
         return msg
 
@@ -108,8 +108,7 @@ class OptionSelectionModel(models.Model):
         correct_option (str): Selectable option that is known to be correct.
         incorrect_option (str): Selectable option that is known to be incorrect.
         display_not_sure (bool): Flag dictating whether the user should be allowed to select "not sure".
-        decieved_feedback (str): Feedback that is specific to the information seen, describing exactly what went wrong if the user is decieved from it.
-        skepical_feedback (str): Feedback that is specific to the information seen, describing exactly what went wrong if the user is skepical of it.
+        feedback (str): Feedback that is specific to the information seen, describing exactly what went wrong if the user is skepical of it, or if the user is decieved from it.
         created (DateTimeField): Date and time when the option selection was created.
         updated (DateTimeField): The date that the option selection was last changed.
     """
@@ -119,21 +118,22 @@ class OptionSelectionModel(models.Model):
     correct_option = models.TextField()
     incorrect_option = models.TextField()
     display_not_sure = models.BooleanField()
-    decieved_feedback = models.TextField()
-    skepical_feedback = models.TextField()
+    feedback = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         """
-        Return: The first 50 characters of the OptionSelectionModel's information.
+        Return: The first 150 characters of the OptionSelectionModel's information.
         """
-        return str(self.information)[0:50]
+        return str(self.information)[0:150]
 
 
 class OptionSelectionTacticModel(models.Model):
     """
-    Model to link a many-to-many relationship between TacticExplainationModel and OptionSelectionModel.
+    Model to link a many-to-many relationship between TacticExplainationModel and OptionSelectionModel. 
+
+    Note that this is only necessary for OptionSelection models that are decieptful. Accurate informations will not have a DisinformationTactic by nature.
 
     Fields:
         option_selection (OptionSelectionModel): Foreign key to the OptionSelectionModel
@@ -162,4 +162,11 @@ class OptionSelectionTacticModel(models.Model):
             )
         ]
 
-
+    def __str__(self) -> str:
+        """
+        Return: The first 70 characters of the option selection and the first 70 of the tactic explaination
+        """
+        os = str(self.option_selection)[0:70]
+        te = str(self.tactic_explaination)[0:70]
+        msg = f'{os} - {te}'
+        return msg
