@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:inoculate/config/wrappers/auth/auth.dart';
 import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/core/error/popup.dart';
 import 'package:inoculate/core/states/route_state.dart';
 import 'package:inoculate/utils/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,18 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        // Stream that manages the user value
         StreamProvider<User?>.value(value: auth.user, initialData: null),
-        ChangeNotifierProvider(create: ((context) => RouteState()))
+
+        // Manage changes to display routes on the navigation rails
+        ChangeNotifierProvider(create: ((context) => RouteState())),
+
+        // Manage the alert dialogues
+        ChangeNotifierProvider(create: ((_) => AlertDialogueManager())),
+        StreamProvider<AlertDialogueDetail?>.value(
+          value: alertStreamController.stream,
+          initialData: null,
+        )
       ],
       child: MaterialApp(
         title: appName,

@@ -27,6 +27,9 @@ dependencies:
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
 
+  # Pre-packaged with flipping animations
+  flip_card: ^0.7.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

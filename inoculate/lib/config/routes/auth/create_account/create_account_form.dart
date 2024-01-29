@@ -71,7 +71,7 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                     try {
                       user = await AuthService()
                           .createUserWithEmailAndPassword(_email, _password);
-                    } on AuthenticationException catch (e) {
+                    } on AuthenticationException {
                       // TODO: show error dialog
                     }
                   }

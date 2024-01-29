@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from a `.env` file, if exists
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,9 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if SECRET_KEY is None:
+    SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # By default, debug will not be enabled.
 DEBUG = os.environ.get('DJANGO_DEBUG', 'FALSE') == 'True'
+if DEBUG is None:
+    DEBUG = os.getenv('DJANGO_DEBUG', 'FALSE') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -150,4 +158,5 @@ REST_FRAMEWORK = {
 
 # ------------------ CORS Headers ------------------------
 
-CORS_ALLOW_ALL_ORIGINS = True
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True

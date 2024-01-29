@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:inoculate/constants/app_constants.dart';
-import 'package:inoculate/core/error/route_not_found.dart';
 import 'package:inoculate/core/states/route_state.dart';
 import 'package:inoculate/modules/home_navigation/navigation_bar.dart';
 import 'package:inoculate/modules/home_navigation/navigation_rail.dart';
@@ -41,7 +40,7 @@ class _HomeState extends State<Home> {
         children: [
           if (MediaQuery.of(context).size.width >= navigationRailScreenWidth)
             buildNavigationRail(context),
-          navigationRoutes[routeState.selectedIndex].widget ?? routeNotFound(),
+          navigationRoutes[routeState.selectedIndex].widget,
         ],
       ),
     );

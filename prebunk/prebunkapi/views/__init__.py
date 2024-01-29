@@ -1,15 +1,10 @@
 from rest_framework.decorators import api_view
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from prebunkapi.models import DisinformationTacticModel, TacticExplainationModel, OptionSelectionModel
-from prebunkapi.serializers import DisinformationTacticSerializer, TacticExplanationSerializer, OptionSelectionSerializer
 
 @api_view(['GET'])
 def get_routes(request):
     """
-    Returns all the availiable routes and a description for what each route does.
+    Returns all the availiable routes and a description for what each route does. 
 
     Modification of code by Dennis Ivy. Source code unavailable (Reason: live streamed code)
     """
@@ -47,25 +42,31 @@ def get_routes(request):
         },
         # ------------------ LESSONS ------------------ 
         {
-            'Endpoint': '/disinformation_tactics/lessons/',
+            'Endpoint': '/lessons/',
+            'method': 'GET',
+            'body': None,
+            'description': 'Return all the lessons a user has done'
+        },
+        {
+            'Endpoint': '/lessons/tactic_id/',
             'method': 'GET',
             'body': None,
             'description': 'Returns an array of lessons for a given disinformation tactic'
         },
         {
-            'Endpoint': '/disinformation_tactics/lessons/id/',
+            'Endpoint': '/lessons/tactic_id/lesson_id/',
             'method': 'GET',
             'body': None,
-            'description': 'Returns a single lesson for a given disinformation tactic'
+            'description': 'Returns a single lesson'
         },
         {
-            'Endpoint': '/disinformation_tactics/lessons/id/submit-results/',
-            'method': 'CREATE',
+            'Endpoint': '/lessons/tactic_id/lesson_id/submit-results/',
+            'method': 'POST',
             'body': {'body': ''},
             'description': 'Upload the result for a given lesson'
         },
         {
-            'Endpoint': '/disinformation_tactics/lessons/id/delete/',
+            'Endpoint': '/lessons/tactic_id/lesson_id/delete/',
             'method': 'DELETE',
             'body': None,
             'description': 'Deletes an existing entry for a lesson'
@@ -134,15 +135,4 @@ def get_routes(request):
         },
     ]
     return Response(routes)
-
-@api_view(['GET'])
-def getDisinformationTactics(request):
-    """
-    Returns an array of all of the disinformation tactics
-    """
-
-    tactics = DisinformationTacticModel.objects.all()
-    serializer = DisinformationTacticSerializer(tactics, many=True)
-
-    return Response(serializer.data)
 

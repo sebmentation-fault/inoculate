@@ -14,14 +14,7 @@ class ApiRoutes extends StatefulWidget {
 class _ApiRoutesState extends State<ApiRoutes> {
   String apiRoutes = 'Loading...';
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    fetchApiRoutes(context);
-  }
-
-  Future<void> fetchApiRoutes(BuildContext buildContext) async {
+  Future<void> _fetchApiRoutes(BuildContext buildContext) async {
     User? user = Provider.of<User?>(buildContext);
 
     if (user == null) {
@@ -40,6 +33,12 @@ class _ApiRoutesState extends State<ApiRoutes> {
 
   @override
   Widget build(BuildContext context) {
-    return InformationCard(data: apiRoutes);
+    return Builder(builder: (innerContext) {
+      if (apiRoutes.startsWith('Loading...')) {
+        _fetchApiRoutes(innerContext);
+      }
+
+      return InformationCard(data: apiRoutes);
+    });
   }
 }
