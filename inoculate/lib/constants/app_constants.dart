@@ -38,3 +38,9 @@ not fetch it.
 
 We will fix this :)
 """;
+
+const String defaultIsAccurate = "Probably Accurate";
+const String defaultIsFake = "Probably Fake";
+
+const int boolFalse = 0;
+const int boolTrue = 1;

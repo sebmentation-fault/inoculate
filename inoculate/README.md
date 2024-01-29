@@ -1,16 +1,29 @@
-# inoculate
+# `inoculate` - The Frontend
 
-A new Flutter project.
+A Fake News Inoculation Game
 
-## Getting Started
+## Configuration
 
-This project is a starting point for a Flutter application.
+### 1. Set Up the Enviroment Variables
 
-A few resources to get you started if this is your first Flutter project:
+You will need to set up some enviroment variables. These are not tracked by the `git` repository, so are custom to you.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Add the following to a `.env` file. 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### 2.1. The Firebase Key
+
+Go to the firebase console and download the admin key, and store the `json` file in a secure location.
+
+```shell
+GOOGLE_APPLICATION_CREDENTIALS='/the_absolute_path_dir/firebase-admin-key.json'
+```
+
+## Compilation
+
+### Development
+
+During development, I find it more accessible to test using the web app of the app, but doing so requires dropping some security privaliges, so I use the following command:
+
+```shell
+flutter run -d chrome --web-browser-flag "--disable-web-security"
+```

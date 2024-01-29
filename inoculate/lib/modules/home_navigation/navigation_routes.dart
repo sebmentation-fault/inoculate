@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
+import 'package:inoculate/core/error/route_not_found.dart';
+import 'package:inoculate/modules/lesson/lesson.dart';
 import 'package:inoculate/widgets/api_routes.dart';
 
 const List<NavigationRoute> navigationRoutes = [
   NavigationRoute(
-    label: "Home",
-    icon: Icon(Icons.home),
-    widget: ApiRoutes(),
+    "Home",
+    Icon(Icons.home),
+    routeWidget: ApiRoutes(),
   ),
   NavigationRoute(
-    label: "Courses",
-    icon: Icon(Icons.golf_course),
-    widget: OptionSelection(
-      answerIndex: 0,
-    ),
+    "Courses",
+    Icon(Icons.golf_course),
+    routeWidget: Lesson(disinformationTactic: 0),
   ),
-  NavigationRoute(label: "Settings", icon: Icon(Icons.settings)),
-  NavigationRoute(label: "Profile", icon: Icon(Icons.manage_accounts)),
+  NavigationRoute("Settings", Icon(Icons.settings)),
+  NavigationRoute("Profile", Icon(Icons.manage_accounts)),
 ];
 
 class NavigationRoute {
   final String label;
   final Icon icon;
-  final Widget? widget;
+  final Widget? routeWidget;
 
-  const NavigationRoute({required this.label, required this.icon, this.widget});
+  const NavigationRoute(this.label, this.icon, {this.routeWidget});
+
+  Widget get widget {
+    return routeWidget ?? const RouteNotFound();
+  }
 }

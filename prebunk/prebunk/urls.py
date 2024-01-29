@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from rest_framework.schemas import get_schema_view
+
+schema_view = get_schema_view(title='PreBunk API',)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('rest_framework.urls')),
     path('api/', include('prebunkapi.urls')),
+    path('schema/', schema_view),
 ]

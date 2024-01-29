@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .auth import InoculateUser
+
+
 class DisinformationTacticModel(models.Model):
     """
     Model representing a disinformation tactic.
@@ -39,7 +42,8 @@ class LessonModel(models.Model):
         user, disinformation_tactic and lesson_id
 
     Meta:
-        constraints (list[UniqueConstraint]): Singleton unique constraint containing user, disinformation tactic, and lesson_id for a primary key
+        constraints (list[UniqueConstraint]): Singleton unique constraint containing user, disinformation tactic, and
+        lesson_id for a primary key
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -73,10 +77,10 @@ class TacticExplainationModel(models.Model):
     Model to store information about disinformation tactics.
 
     Fields:
-        id (int): 
+        id (int):
         disinformation_tactic (DisinformationTacticModel): Foreign key to the DisinformationTacticModel model.
-        explaination (str): Detailed information about how to spot a specific disinformation tactic.
-        created (DateTimeField): Date and time when the explaination was created.
+        explanation (str): Detailed information about how to spot a specific disinformation tactic.
+        created (DateTimeField): Date and time when the explanation was created.
         updated (DateTimeField): The date that the explaination was last changed.
 
     Primary key:
@@ -108,7 +112,8 @@ class OptionSelectionModel(models.Model):
         correct_option (str): Selectable option that is known to be correct.
         incorrect_option (str): Selectable option that is known to be incorrect.
         display_not_sure (bool): Flag dictating whether the user should be allowed to select "not sure".
-        feedback (str): Feedback that is specific to the information seen, describing exactly what went wrong if the user is skepical of it, or if the user is decieved from it.
+        feedback (str): Feedback that is specific to the information seen, describing exactly what went wrong if the
+        user is skeptical of it, or if the user is deceived from it.
         created (DateTimeField): Date and time when the option selection was created.
         updated (DateTimeField): The date that the option selection was last changed.
     """
@@ -131,9 +136,10 @@ class OptionSelectionModel(models.Model):
 
 class OptionSelectionTacticModel(models.Model):
     """
-    Model to link a many-to-many relationship between TacticExplainationModel and OptionSelectionModel. 
+    Model to link a many-to-many relationship between TacticExplainationModel and OptionSelectionModel.
 
-    Note that this is only necessary for OptionSelection models that are decieptful. Accurate informations will not have a DisinformationTactic by nature.
+    Note that this is only necessary for OptionSelection models that are deceitful. Accurate information will not have a
+    DisinformationTactic by nature.
 
     Fields:
         option_selection (OptionSelectionModel): Foreign key to the OptionSelectionModel
@@ -145,7 +151,8 @@ class OptionSelectionTacticModel(models.Model):
         option_selection and tactic_explaination
 
     Meta:
-        constraints (list[UniqueConstraint]): Singleton unique constraint containing option_selection and tactic_explaination
+        constraints (list[UniqueConstraint]): Singleton unique constraint containing option_selection and
+        tactic_explaination
     """
 
     id = models.AutoField(primary_key=True)

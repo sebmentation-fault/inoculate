@@ -54,7 +54,7 @@ class _SignInFormState extends State<SignInForm> {
                   User? user;
                   try {
                     user = await AuthService().signInAnonomous();
-                  } on AuthenticationException catch (e) {
+                  } on AuthenticationException {
                     // TODO: show error dialog
                   }
                 },
@@ -68,7 +68,7 @@ class _SignInFormState extends State<SignInForm> {
                         try {
                           user = await AuthService()
                               .signInWithEmailAndPassword(_email, _password);
-                        } on AuthenticationException catch (e) {
+                        } on AuthenticationException {
                           // TODO: show error dialog
                         }
                       }

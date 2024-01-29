@@ -1,15 +1,13 @@
-"""
-Helper functions for the Views to reduce complexity and code reuse
-"""
-from django.db import IntegrityError
-from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+
 from rest_framework.serializers import Serializer
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_412_PRECONDITION_FAILED, HTTP_422_UNPROCESSABLE_ENTITY
-from prebunkapi.models import DisinformationTacticModel, TacticExplainationModel, OptionSelectionModel
-from prebunkapi.serializers import DisinformationTacticSerializer, TacticExplanationSerializer, OptionSelectionSerializer
 
-def get_disinformation_tactic(name: str):
+from prebunkapi.models.modles import DisinformationTacticModel
+from prebunkapi.serializers import DisinformationTacticSerializer
+
+
+def get_disinformation_tactic(name: int) -> DisinformationTacticModel:
     """
     Get a disinformation tactic instance by primary key.
 
@@ -29,7 +27,8 @@ def get_disinformation_tactic(name: str):
         code = HTTP_404_NOT_FOUND
         raise ValidationError(message={'error_msg': error_msg, 'error_code': code})
 
-def list_disinformation_tactics():
+
+def list_disinformation_tactics() -> [DisinformationTacticModel]:
     """
     List all disinformation tactics.
 
@@ -38,7 +37,8 @@ def list_disinformation_tactics():
     """
     return DisinformationTacticModel.objects.all()
 
-def create_disinformation_tactic(serializer: Serializer):
+
+def create_disinformation_tactic(serializer: Serializer) -> DisinformationTacticModel:
     """
     Create a new disinformation tactic.
 
@@ -50,8 +50,9 @@ def create_disinformation_tactic(serializer: Serializer):
     """
     try:
         is_valid = serializer.is_valid(raise_exception=True)
-        if is_valid: return serializer.save()
-        else: 
+        if is_valid:
+            return serializer.save()
+        else:
             error_msg = 'The disinformation tactic could not be created'
             code = HTTP_412_PRECONDITION_FAILED
             raise ValidationError(message={'error_msg': error_msg, 'error_code': code})
@@ -61,61 +62,12 @@ def create_disinformation_tactic(serializer: Serializer):
         raise ValidationError(message={'error_msg': error_msg, 'error_code': code})
 
 
-def delete_disinformation_tactic(pk):
+def delete_disinformation_tactic(tactic_id: int):
     """
     Delete a disinformation tactic by primary key.
 
     Args:
-        pk (int): Primary key of the disinformation tactic.
+        tactic_id (int): Primary key of the disinformation tactic.
     """
-    disinformation_tactic = get_disinformation_tactic(pk)
+    disinformation_tactic = get_disinformation_tactic(tactic_id)
     disinformation_tactic.delete()
-
-
-def list_explanations():
-    """
-    List all explanations for a given disinformation tactic.
-
-    Args:
-
-    Returns:
-        list: List of explanation instances.
-    """
-    pass
-
-
-def create_explanation():
-    """
-    Create a new explanation.
-
-    Args:
-
-    Returns:
-        TacticExplainationModel: Created explanation instance.
-    """
-    pass
-
-
-def list_options(disinformation_tactic_pk):
-    """
-    List all options for a given disinformation tactic.
-
-    Args:
-        disinformation_tactic_pk (int): Primary key of the disinformation tactic.
-
-    Returns:
-        list: List of OptionSelection instances.
-    """
-    pass
-
-def create_option():
-    """
-    Create a new option.
-
-    Args:
-
-    Returns:
-        OptionSelectionModel: Created OptionSelection instance.
-    """
-    pass
-

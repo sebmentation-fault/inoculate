@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// client shortly after closing it), then the user's home page is the community
 /// dashboard, otherwise, it is the log in/register page.
 class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key, required this.title}) : super(key: key);
+  const AuthPage({super.key, required this.title});
 
   final String title;
 
