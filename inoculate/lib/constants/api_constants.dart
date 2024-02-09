@@ -18,3 +18,15 @@ String get prebunkApiBase {
 String getLessonApi(int id) {
   return "$prebunkApiBase/lessons/$id";
 }
+
+/// Get the Courses API path
+String get getCoursesApi {
+  return "$prebunkApiBase/disinformation_tactics";
+}
+
+/// Get the Course API path for a given tactic.
+///
+/// Parameter: ID for the disinformation tactic.
+String getCourseAPI(int id) {
+  return "$prebunkApiBase/disinformation_tactics/$id";
+}
