@@ -10,11 +10,13 @@ class DisinformationTacticModel(models.Model):
 
     Fields:
         name (CharField): The name of the disinformation tactic.
+        description (CharField): A short description of the disinformation tactic
         created (DateTimeField): The date that the disinformation tactic was created.
         updated (DateTimeField): The date that the disinformation_tactic was last changed.
     """
 
-    name = models.CharField(max_length=255, unique=True, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField()
     # auto_now_add means on the first time this record is saved
     created = models.DateTimeField(auto_now_add=True)
     # auto_now means on every time this record is saved

@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class Lesson extends StatefulWidget {
   final int disinformationTactic;
 
-  const Lesson({super.key, required this.disinformationTactic});
+  const Lesson(this.disinformationTactic, {super.key});
 
   @override
   State<Lesson> createState() => _LessonState();

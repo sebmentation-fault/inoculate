@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inoculate/core/error/route_not_found.dart';
-import 'package:inoculate/modules/lesson/lesson.dart';
+import 'package:inoculate/modules/course/courses.dart';
 import 'package:inoculate/widgets/api_routes.dart';
 
 const List<NavigationRoute> navigationRoutes = [
@@ -12,7 +12,7 @@ const List<NavigationRoute> navigationRoutes = [
   NavigationRoute(
     "Courses",
     Icon(Icons.golf_course),
-    routeWidget: Lesson(disinformationTactic: 0),
+    routeWidget: Courses(),
   ),
   NavigationRoute("Settings", Icon(Icons.settings)),
   NavigationRoute("Profile", Icon(Icons.manage_accounts)),
