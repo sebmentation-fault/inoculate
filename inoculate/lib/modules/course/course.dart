@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:inoculate/modules/lesson/lesson.dart';
 import 'package:inoculate/utils/models/course.dart';
-import 'package:inoculate/utils/services/lesson/get_lesson.dart';
 
 /// A `Course` is one which aims to inoculate users on a specific disinformation
 /// tactic.

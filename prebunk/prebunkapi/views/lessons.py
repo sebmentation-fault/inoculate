@@ -1,80 +1,136 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.exceptions import AuthenticationFailed
 
-from prebunkapi.models.auth import InoculateUser
+from prebunkapi.models.modles import DisinformationTacticModel, LessonModel, OptionSelectionModel, \
+    TacticExplainationModel
 from prebunkapi.services import get_user_token
+from prebunkapi.services.lessons import get_recommended_difficulty_for_tactic, get_lesson_around_difficulty
 
 
 @api_view(['GET'])
-def get_lesson(request, tactic_id):
+def get_lesson(request, tactic_id) -> Response:
     """
     Fetches a custom lesson for a user based on a firebase user token and the 
-    disinformation tactic ID.
+    disinformation tactic ID, and returns it in JSON format.
 
     This view does not return any related IncorrectSelections
 
     HttpRequest:
         Authorization Header: Bearer {user token}.
 
-    Return:
-        List of JSON (success): a list of the lesson in JSON format.
+    Return: [JSON]
+        List of JSON (success): a list of the lesson in JSON format
+            * format: [
+                {
+                  'type': ...,
+                  'id': ...,
+                  'body' ...,
+                },
+                {
+                  'type': 'option_selection',
+                  'id': ...,
+                  'body': ...,
+                  'correct': ...,
+                  'incorrect': ...,
+                  'not_sure': ...,
+                  'real_difficulty': ...,
+                  'opportunity_cost': ...,
+                  'feedback': ...,
+                },
+                {
+                  'type': 'option_selection',
+                  'id': ...,
+                  'body': ...,
+                  'is_accurate': ...,
+                  'not_sure': ...,
+                  'real_difficulty': ...,
+                  'opportunity_cost': ...,
+                  'feedback': ...,
+                },
+              ]
         Status 401: Firebase user token was not provided.
         Status 404: Firebase user token did not match an entry in the database.
     """
-    #try:
-    #    user: InoculateUser = get_user_token(request)
-    #except ValueError:
-    #    return Response({'error': 'Firebase user token was not provided.'}, status=401)
-    #except KeyError:
-    #    return Response({'error': 'Firebase user token was provided, but did not match a user.'}, status=404)
 
-    # TODO: generate an actual lesson dynamically from user
-    # TODO: store the lesson in the database
-    lesson: [] = [
-        {
-            'type': 'tactic_explaination',
-            'id': 12,
-            'body': '# Tactic Explaination!!! \n\nThis is the explaination!',
-        },
-        {
-            'type': 'option_selection',
-            'id': 12,
-            'body': '# Option Selection 1!!! \n\nThis is the information!',
-            'correct': 'This is the correct option',
-            'incorrect': 'This is the incorrect option',
-            'not_sure': True,
-            'feedback': 'This is the feedback',
-        },
-        {
-            'type': 'tactic_explaination',
-            'id': 3,
-            'body': '# Explains Tactic!!! \n\nThis is the explaination!',
-        },
-        {
-            'type': 'option_selection',
-            'id': 8,
-            'body': '# Option Selection 2!!! \n\nThis is more information!',
-            'correct': 'This is the correct option',
-            'incorrect': 'This is the incorrect option',
-            'not_sure': False,
-            'feedback': 'You must have selected the incorrect option init.',
-        },
-        {
-            'type': 'option_selection',
-            'id': 2,
-            'body': '# Option Selection 3!!! \n\nThis is more information!',
-            'is_accurate': False,
-            'not_sure': False,
-            'feedback': 'You must have selected the incorrect option init.',
-        },
-    ]
+    # Check if the user token is valid by fetching the user from firebase using the user token in the request
+    try:
+        user = get_user_token(request)
+    except AuthenticationFailed as e:
+        # Return 401 (Unauthorized) if the user token is invalid along with suitable error messages
+        error_message = {
+            'error_title': 'Unauthorized',
+            'error_message': str(e),
+        }
+
+        return Response(error_message, status=401)
+
+    recommended_difficulty = get_recommended_difficulty_for_tactic(user, tactic_id)
+
+    lesson_model, tactic_explanations, option_selections = get_lesson_around_difficulty(user, tactic_id,
+                                                                                        recommended_difficulty)
+    lesson = []
+
+    # Populate the lesson (list of json), which has 1 tactic explainations, followed by 2 option selections
+    for tactic_explanation in tactic_explanations:
+        o1 = option_selections.pop()
+        o2 = option_selections.pop()
+
+        def tactic_explaination_json(te: TacticExplainationModel):
+            """
+            Helper function, return a JSON object for the tactic explaination.
+            """
+            return {
+                'type': 'tactic_explaination',
+                'id': te.id,
+                'body': te.explaination,
+            }
+
+        def option_selection_json(os: OptionSelectionModel):
+            """
+            Helper function, return a JSON object for the option selection.
+
+            If the option selection correct/incorrect is "Fake" or "Accurate", then we return is_accurate with flag,
+            otherwise we return the entire correct/incorrect message.
+            """
+            if os.correct_option == "Fake" or os.correct_option == "Accurate":
+                return {
+                    'type': 'option_selection',
+                    'id': os.id,
+                    'body': os.information,
+                    'is_accurate': os.correct_option == "Accurate",
+                    'not_sure': os.display_not_sure,
+                    'real_difficulty': os.real_difficulty,
+                    'opportunity_cost': os.opportunity_cost,
+                    'feedback': os.feedback,
+                }
+            else:
+                return {
+                    'type': 'option_selection',
+                    'id': os.id,
+                    'body': os.information,
+                    'correct': os.correct_option,
+                    'incorrect': os.incorrect_option,
+                    'not_sure': os.display_not_sure,
+                    'real_difficulty': os.real_difficulty,
+                    'opportunity_cost': os.opportunity_cost,
+                    'feedback': os.feedback,
+                }
+
+        lesson.append(tactic_explaination_json(tactic_explanation))
+        lesson.append(option_selection_json(o1))
+        lesson.append(option_selection_json(o2))
+
+    disinformation_tactic = DisinformationTacticModel.objects.filter(id=tactic_id).first()
 
     response = {
-        'tactic_id': 0,
-        'tactic_name': 'Disinformation Tactic',
-        'tactic_description': 'A concise description of the disinformation tactic :)',
-        'lesson_id': 0,
+        'tactic_id': tactic_id,
+        'tactic_name': disinformation_tactic.name,
+        'tactic_description': disinformation_tactic.description,
+        'lesson_id': lesson_model.lesson_id,
+        'general_difficulty': lesson_model.difficulty,
         'lesson': lesson,
     }
 
-    return Response(response)
+    return Response(response, status=200)
+
