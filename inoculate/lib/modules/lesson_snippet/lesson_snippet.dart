@@ -24,6 +24,9 @@ class _InformationCardState extends State<InformationCard> {
 
     double height = MediaQuery.of(context).size.height - (hasNavBar ? 100 : 60);
 
+    // get the maximum width availiable in widget
+
+
     return Container(
       padding: const EdgeInsets.all(16),
       constraints: BoxConstraints(

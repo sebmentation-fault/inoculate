@@ -7,7 +7,8 @@ Future<Map<String, String>> getAuthorizationHeader(User user) async {
 
   // Attach the user token to the HTTP header
   return {
-    'Authorization': 'Bearer $userToken',
+    'Authorization': 'Token $userToken',
+    "Content-Type": "application/json",
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE, HEAD',
     'Access-Control-Allow-Headers':

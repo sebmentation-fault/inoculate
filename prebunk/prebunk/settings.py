@@ -53,7 +53,10 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Django CORS headers allows the frontend to communicate with the backend
-    "corsheaders",
+    'corsheaders',
+
+    # Custom class to communicate with Firebase
+    'firebase_auth',
 ]
 
 MIDDLEWARE = [
@@ -146,9 +149,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'prebunkapi.backend.FirebaseBackend',
+        'firebase_auth.authentication.FirebaseAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.IsAuthenticated',
