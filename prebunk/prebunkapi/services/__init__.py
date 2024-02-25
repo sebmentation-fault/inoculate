@@ -24,5 +24,7 @@ def get_user_token(request: HttpRequest) -> User:
     # Check if the user token is valid by fetching the user from firebase using the user token in the request
     firebase_authentication = FirebaseAuthentication()
 
-    return firebase_authentication.authenticate(request)
+    user, _ = firebase_authentication.authenticate(request)
+
+    return user
 

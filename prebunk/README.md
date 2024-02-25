@@ -1,5 +1,23 @@
 # Prebunk - The Backend
 
+## Datasets
+
+The following datasets whose source is *ChatGPT* are being used:
+
+* `./datasets/causality_mock_data.csv` - contains information about causality
+* `./datasets/selection_bias_mock_data.csv` - contains information that may have selection biases
+* `./datasets/emotive_mock_data.csv` - contains information that may use emotive language
+
+The columns are separated using the 'pipe' character, and have the following columns:
+
+* information
+* source
+* correct option
+* incorrect option
+* display not sure (bool)
+* feedback
+
+
 ## Configuration
 
 ### 1. Generate a New Key
@@ -36,3 +54,4 @@ Set up debugging on your local testing machine by setting this to `True`:
 ```python
 DJANGO_DEBUG=True
 ```
+

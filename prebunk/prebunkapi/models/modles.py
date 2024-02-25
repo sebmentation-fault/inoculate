@@ -7,13 +7,15 @@ class DisinformationTacticModel(models.Model):
     Model representing a disinformation tactic.
 
     Fields:
+        id (int): The primary key of the disinformation tactic.
         name (CharField): The name of the disinformation tactic.
         description (CharField): A short description of the disinformation tactic
         created (DateTimeField): The date that the disinformation tactic was created.
         updated (DateTimeField): The date that the disinformation_tactic was last changed.
     """
 
-    name = models.CharField(max_length=255, unique=True)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
     description = models.TextField()
     # auto_now_add means on the first time this record is saved
     created = models.DateTimeField(auto_now_add=True)
@@ -53,7 +55,7 @@ class LessonModel(models.Model):
     lesson_id = models.IntegerField()
     average_difficulty = models.IntegerField()
     # score added later, so needs to be nullable
-    score = models.IntegerField(null=True)
+    score = models.IntegerField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -114,6 +116,7 @@ class OptionSelectionModel(models.Model):
 
     Fields:
         information (str): Sets a scene or contains a headline/social media post.
+        source (str): The source of the information.
         correct_option (str): Selectable option that is known to be correct.
         incorrect_option (str): Selectable option that is known to be incorrect.
         display_not_sure (bool): Flag dictating whether the user should be allowed to select "not sure".
@@ -128,13 +131,14 @@ class OptionSelectionModel(models.Model):
 
     id = models.AutoField(primary_key=True)
     information = models.TextField()
+    source = models.TextField()
     correct_option = models.TextField()
     incorrect_option = models.TextField()
     display_not_sure = models.BooleanField()
     feedback = models.TextField()
     real_difficulty = models.IntegerField()
     opportunity_cost = models.IntegerField()
-    source_url = models.URLField()
+    source_url = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -147,19 +151,16 @@ class OptionSelectionModel(models.Model):
 
 class OptionSelectionTacticModel(models.Model):
     """
-    Model to link a many-to-many relationship between TacticExplainationModel and OptionSelectionModel.
-
-    Note that this is only necessary for OptionSelection models that are deceitful. Accurate information will not have a
-    DisinformationTactic by nature.
+    Model to link a many-to-many relationship between DisinformationTactic and OptionSelectionModel.
 
     Fields:
         option_selection (OptionSelectionModel): Foreign key to the OptionSelectionModel
-        tactic_explaination (OptionSelectionModel): Foreign key to the TacticExplainationModel
+        disinformation_tactic (DisinformationTacticModel): Foreign key to the DisInformationTacticModel
         created (DateTimeField): Date and time when the option selection tactic was created.
         updated (DateTimeField): The date that the option selection tactic was last changed.
 
     Primary key:
-        option_selection and tactic_explaination
+        option_selection and DisinformationTacticModel
 
     Meta:
         constraints (list[UniqueConstraint]): Singleton unique constraint containing option_selection and
@@ -168,14 +169,14 @@ class OptionSelectionTacticModel(models.Model):
 
     id = models.AutoField(primary_key=True)
     option_selection = models.ForeignKey(OptionSelectionModel, on_delete=models.CASCADE)
-    tactic_explaination = models.ForeignKey(TacticExplainationModel, on_delete=models.CASCADE)
+    disinformation_tactic = models.ForeignKey(DisinformationTacticModel, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['option_selection', 'tactic_explaination'],
+                fields=['option_selection', 'disinformation_tactic'],
                 name='option_selection_tactic'
             )
         ]
@@ -185,7 +186,7 @@ class OptionSelectionTacticModel(models.Model):
         Return: The first 70 characters of the option selection and the first 70 of the tactic explaination
         """
         os = str(self.option_selection)[0:70]
-        te = str(self.tactic_explaination)[0:70]
+        te = str(self.disinformation_tactic)[0:70]
         msg = f'{os} - {te}'
         return msg
 

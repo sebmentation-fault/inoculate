@@ -1,11 +1,7 @@
 from django.contrib import admin
 
-from prebunkapi.models.auth import InoculateUser
 from prebunkapi.models.modles import (DisinformationTacticModel, LessonModel, OptionSelectionModel,
                                       OptionSelectionTacticModel, TacticExplainationModel)
-
-# Add the user
-admin.site.register(InoculateUser)
 
 # Add the API models
 admin.site.register(DisinformationTacticModel)
