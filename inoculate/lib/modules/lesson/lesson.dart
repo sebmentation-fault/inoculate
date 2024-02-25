@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:inoculate/core/states/lesson_state.dart';
+import 'package:inoculate/modules/lesson/performance_review.dart';
 import 'package:inoculate/utils/services/lesson/get_lesson.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +78,7 @@ class _LessonState extends State<Lesson> {
                     key: ValueKey(_lessonState!.currentIndex),
                     child: snippets[_lessonState!.currentIndex],
                   )
-                : const Placeholder();
+                : const PerformanceReview();
           } else {
             // Unknown error
             return const Center(

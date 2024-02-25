@@ -1,6 +1,7 @@
 from random import sample
 
 from django.contrib.auth.models import User
+from django.db.models import Subquery
 
 from prebunkapi.models.modles import DisinformationTacticModel, OptionSelectionModel, LessonModel, \
     OptionSelectionTacticModel, OptionSelectionLessonModel, TacticExplainationModel
@@ -22,7 +23,11 @@ def get_previous_lessons(user: User, tactic_id: int) -> [LessonModel]:
     disinformation_tactic = DisinformationTacticModel.objects.filter(id=tactic_id).first()
 
     # Filter the user's lessons based on the disinformation tactic
-    user_lessons = LessonModel.objects.filter(user=user, disinformation_tactic=disinformation_tactic)
+    try:
+        user_lessons = LessonModel.objects.filter(user=user, disinformation_tactic=disinformation_tactic)
+    except TypeError as e:
+        # the user has not done this tactic before, so there are no lessons
+        return []
 
     return user_lessons
 
@@ -44,13 +49,13 @@ def get_recommended_difficulty_for_tactic(user: User, tactic_id: int) -> int:
     user_lessons = get_previous_lessons(user, tactic_id)
 
     # If there is no lesson for the user, create one
-    if user_lessons.count() == 0:
+    if len(user_lessons) == 0:
         default_difficulty = 100
         return default_difficulty
     else:
         # Get the most recent difficulty
         most_recent_lesson = user_lessons.order_by('-created').first()
-        return most_recent_lesson.difficulty + most_recent_lesson.score
+        return most_recent_lesson.average_difficulty + most_recent_lesson.score
 
 
 def get_lesson_around_difficulty(user: User, tactic_id: int, difficulty: int, diff_range: int = 10) -> (LessonModel,
@@ -79,22 +84,23 @@ def get_lesson_around_difficulty(user: User, tactic_id: int, difficulty: int, di
 
     # Filter the tactic explainations based on the disinformation tactic, and get 5 random ones
     tactic_explainations = TacticExplainationModel.objects.filter(disinformation_tactic=disinformation_tactic)
-    tactic_explainations = sample(tactic_explainations, tactic_count)
+    tactic_explainations = tactic_explainations.order_by('?')[:tactic_count]
 
     # Filter option selections based on the disinformation tactic and the difficulty
     option_selection_tactics = OptionSelectionTacticModel.objects.filter(disinformation_tactic=disinformation_tactic)
 
     # Get the option selections that are in the list of option_selection_tactics and where the difficulty is in the
     # range of the difficulty plus/minus 10, and get 10 random ones
-    option_selections = OptionSelectionModel.objects.filter(option_selection_tactic__in=option_selection_tactics,
+    option_selections = OptionSelectionModel.objects.filter(id__in=Subquery(option_selection_tactics
+                                                                            .values('option_selection')),
                                                             real_difficulty__gt=difficulty - diff_range,
                                                             real_difficulty__lt=difficulty + diff_range)
-    option_selections = sample(option_selections, option_selection_count)
+    option_selections = option_selections.order_by('?')[:option_selection_count]
 
     # Set the ID to be the successor to the previous one
     previous_lessons = get_previous_lessons(user, tactic_id)
 
-    if previous_lessons.count() == 0:
+    if len(previous_lessons) == 0:
         lesson_id = 0
     else:
         lesson_id = previous_lessons.order_by('-lesson_id').first().lesson_id + 1

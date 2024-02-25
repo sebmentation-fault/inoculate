@@ -29,7 +29,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
     Maintainer author: Sebastian Kjallgren
     """
 
-    def authenticate(self, request):
+    def authenticate(self, request) -> (User, None):
         """
         Method to authenticate the user token with the Firebase server.
 
@@ -61,6 +61,6 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
-        user = User.objects.get_or_create(username=uid)
+        (user, _) = User.objects.get_or_create(username=uid)
 
-        return user
+        return user, None

@@ -67,14 +67,16 @@ def get_lesson(request, tactic_id) -> Response:
 
     recommended_difficulty = get_recommended_difficulty_for_tactic(user, tactic_id)
 
-    lesson_model, tactic_explanations, option_selections = get_lesson_around_difficulty(user, tactic_id,
-                                                                                        recommended_difficulty)
+    (lesson_model, tactic_explanations, option_selection_lessons) = get_lesson_around_difficulty(user, tactic_id,
+                                                                                                 recommended_difficulty)
     lesson = []
 
-    # Populate the lesson (list of json), which has 1 tactic explainations, followed by 2 option selections
+    # Populate the lesson (list of json), which has 1 tactic explainations, followed by 2 option selections lessons
     for tactic_explanation in tactic_explanations:
-        o1 = option_selections.pop()
-        o2 = option_selections.pop()
+        o1 = option_selection_lessons.pop()
+        o1 = OptionSelectionModel.objects.filter(id=o1.option_selection.id).first()
+        o2 = option_selection_lessons.pop()
+        o2 = OptionSelectionModel.objects.filter(id=o2.option_selection.id).first()
 
         def tactic_explaination_json(te: TacticExplainationModel):
             """
@@ -128,9 +130,11 @@ def get_lesson(request, tactic_id) -> Response:
         'tactic_name': disinformation_tactic.name,
         'tactic_description': disinformation_tactic.description,
         'lesson_id': lesson_model.lesson_id,
-        'general_difficulty': lesson_model.difficulty,
+        'general_difficulty': lesson_model.average_difficulty,
         'lesson': lesson,
     }
+
+    print(f'Response: {response}')
 
     return Response(response, status=200)
 
