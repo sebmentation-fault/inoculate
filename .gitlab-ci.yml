@@ -16,8 +16,8 @@ deploy_django:
     - mkdir -p ~/.ssh
     - echo "StrictHostKeyChecking no" > ~/.ssh/config
   script:
-    - rsync -avz --exclude='.git/' --exclude='node_modules/' ./prebunk/ prebunker@$134.122.99.90:/home/prebunker/prebunk_game
-    - ssh prebunker@$134.122.99.90 'cd /home/prebunker/ && source venv/bin/activate && cd /home/prebunker/prebunk_game && pip install -r requirements.txt && ./manage.py migrate && ./manage.py collectstatic --noinput && sudo systemctl restart prebunk_game'
+    - rsync -avz --exclude='.git/' --exclude='node_modules/' ./prebunk/ prebunker@134.122.99.90:/home/prebunker/prebunk_game
+    - ssh prebunker@134.122.99.90 'cd /home/prebunker/ && source venv/bin/activate && cd /home/prebunker/prebunk_game && pip install -r requirements.txt && ./manage.py migrate && ./manage.py collectstatic --noinput && sudo systemctl restart prebunk_game'
   environment:
     name: production
     url: http://134.122.99.90
