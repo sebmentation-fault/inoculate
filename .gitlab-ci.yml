@@ -1,0 +1,27 @@
+stages:
+  - test
+  - deploy
+
+test:
+  image: python:3.9
+  stage: test
+  script:
+    - pip install -r prebunk/requirements.txt
+    - python prebunk/manage.py test
+
+deploy_django:
+  stage: deploy
+  only:
+    - main
+  before_script:
+    - 'sudo apt-get update -y && sudo apt-get install -y openssh-client rsync'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo "StrictHostKeyChecking no" > ~/.ssh/config
+  script:
+    - rsync -avz --exclude='.git/' --exclude='node_modules/' ./prebunk/ prebunker@$134.122.99.90:/home/prebunker/prebunk_game
+    - ssh prebunker@$134.122.99.90 'cd /home/prebunker/ && source venv/bin/activate && cd /home/prebunker/prebunk_game && pip install -r requirements.txt && ./manage.py migrate && ./manage.py collectstatic --noinput && sudo systemctl restart prebunk_game'
+  environment:
+    name: production
+    url: http://134.122.99.90
