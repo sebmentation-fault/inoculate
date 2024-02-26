@@ -5,10 +5,9 @@ deploy_django:
   stage: deploy
   tags:
     - deployer
-  only:
-    - main
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
   before_script:
     - 'sudo apt-get update -y && sudo apt-get install -y openssh-client rsync'
     - eval $(ssh-agent -s)
