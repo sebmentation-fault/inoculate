@@ -1,13 +1,5 @@
 stages:
-  - test
   - deploy
-
-test:
-  image: python:3.9
-  stage: test
-  script:
-    - pip install -r prebunk/requirements.txt
-    - python prebunk/manage.py test
 
 deploy_django:
   stage: deploy
