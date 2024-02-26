@@ -8,6 +8,11 @@ deploy_django:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: on_success
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   script:
     - 'echo "Running main script..."'
     - rsync -avz --exclude='.git/' --exclude='node_modules/' ./prebunk/ prebunker@134.122.99.90:/home/prebunker/prebunk_game
