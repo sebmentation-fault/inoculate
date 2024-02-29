@@ -9,5 +9,16 @@ deploy_django:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: on_success
   script:
-    - 'echo "Running main script..."'
-    - cd /home/prebunker/ && source venv/bin/activate && cd /home/prebunker/FakeNewsInoculationGame/prebunk && git pull && pip install -r requirements.txt && python3 manage.py migrate && python3 manage.py collectstatic --noinput && sudo systemctl restart prebunk_game
+    - echo "Running main script..."
+    - cd /home/prebunker/
+    - echo "Activating python virtual environment..."
+    - source venv/bin/activate
+    - echo "Pulling latest changes..."
+    - cd /home/prebunker/FakeNewsInoculationGame/prebunk && git pull
+    - echo "Updating python dependencies..."
+    - pip install -r requirements.txt
+    - echo "Migrating the Django database..."
+    - python3 manage.py migrate && python3 manage.py collectstatic --noinput
+    - echo "Restarting the prebunk server..."
+    - sudo systemctl restart prebunk_game
+    - echo "Done!"
