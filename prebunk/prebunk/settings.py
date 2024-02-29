@@ -33,7 +33,10 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'FALSE') == 'True'
 if DEBUG is None:
     DEBUG = os.getenv('DJANGO_DEBUG', 'FALSE') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '209.38.160.225',
+]
+
 
 
 # Application definition
