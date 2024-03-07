@@ -34,6 +34,7 @@ if DEBUG is None:
     DEBUG = os.getenv('DJANGO_DEBUG', 'FALSE') == 'True'
 
 ALLOWED_HOSTS = [
+    'localhost',
     '209.38.160.225',
 ]
 

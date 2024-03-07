@@ -23,7 +23,6 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
     When provided with a user token, this class checks it with the Firebase server to verify authenticity.
 
     Inspiration/Credits to:
-    * Justin Thomas - https://medium.com/@justhomas/how-to-connect-flutter-and-firebase-authentication-with-your-django-rest-framework-backend-b7b9a0b1f5cb
     * Oscar Alsing - https://www.oscaralsing.com/firebase-authentication-in-django/
 
     Maintainer author: Sebastian Kjallgren
