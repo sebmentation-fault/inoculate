@@ -97,6 +97,7 @@ Widget buildPreview(String tacticName, String tacticDescription) {
 
 OptionSelection? buildOptionSelection(
     BuildContext context, Map<String, dynamic> item) {
+  int id = item['id'];
   String information = item['body'];
   bool showNotSure = item['not_sure'];
   int answerIndex;
@@ -134,6 +135,7 @@ OptionSelection? buildOptionSelection(
   }
 
   return OptionSelection(
+    id: id,
     answerIndex: answerIndex,
     information: information,
     showNotSure: showNotSure,

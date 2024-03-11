@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 ///
 /// By default, the "Not Sure" option will always be shown
 class OptionSelection extends StatefulWidget {
+  final int id;
   final String? information;
   final List<String>? options;
   final int answerIndex;
@@ -21,6 +22,7 @@ class OptionSelection extends StatefulWidget {
 
   const OptionSelection(
       {super.key,
+      required this.id,
       this.information,
       this.options,
       required this.answerIndex,

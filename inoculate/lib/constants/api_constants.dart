@@ -20,6 +20,11 @@ String getLessonApi(int id) {
   return "$prebunkApiBase/lessons/$id";
 }
 
+/// Used to push the results of a lesson back to the server.
+String getPostLessonResults(int tactic, int lesson) {
+  return "$prebunkApiBase/lessons/$tactic/$lesson";
+}
+
 /// Get the Courses API path
 String get getCoursesApi {
   return "$prebunkApiBase/disinformation_tactics";
