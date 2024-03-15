@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from rest_framework.serializers import Serializer
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_412_PRECONDITION_FAILED, HTTP_422_UNPROCESSABLE_ENTITY
 
-from prebunkapi.models.modles import DisinformationTacticModel
+from prebunkapi.models.modles import DisinformationTacticModel, LessonModel
 from prebunkapi.serializers import DisinformationTacticSerializer
 
 
@@ -71,3 +72,25 @@ def delete_disinformation_tactic(tactic_id: int):
     """
     disinformation_tactic = get_disinformation_tactic(tactic_id)
     disinformation_tactic.delete()
+
+
+def get_most_recent_tactic(user: User) -> DisinformationTacticModel | None:
+    """
+    Get the most recently studied disinformation tactic for a user.
+
+    Args:
+        user (User): The user for whom the most recently studied disinformation tactic is being fetched.
+
+    Returns:
+        DisinformationTacticModel: The most recently studied disinformation tactic.
+    """
+
+    # Filter all the Lesson Models, and order them by the created date
+    try:
+        most_recent_lesson = LessonModel.objects.filter(user=user).order_by('-created').first()
+
+        return most_recent_lesson.disinformation_tactic
+
+    finally:
+        return None
+

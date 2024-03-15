@@ -181,4 +181,3 @@ def post_lesson_results(request, tactic_id, lesson_id) -> Response:
     lesson.save()
 
     return Response(status=200)
-
