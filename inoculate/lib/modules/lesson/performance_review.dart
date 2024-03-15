@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 /// The widget shows a message.
 ///
 /// The widget has a button to return to the course selection screen.
-class PerformanceReview extends StatelessWidget {
+class PerformanceReview extends StatefulWidget {
   final double _minScreenSize = navigationRailScreenWidth;
 
   const PerformanceReview({super.key});
