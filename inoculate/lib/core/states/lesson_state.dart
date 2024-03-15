@@ -8,12 +8,22 @@ import 'package:inoculate/utils/models/lesson.dart';
 /// kept up-to-date.
 class LessonState extends ChangeNotifier {
   int _currentIndex = 0;
+
+  int _falsePositives = 0;
+  int _falseNegatives = 0;
+  int _truePositives = 0;
+  int _trueNegatives = 0;
+
   final List<OptionSelection> _correctSelections = [];
   final List<OptionSelection> _incorrectSelections = [];
 
   LessonDetail? _lessonDetail;
 
   int get currentIndex => _currentIndex;
+  int get falsePositives => _falsePositives;
+  int get falseNegatives => _falseNegatives;
+  int get truePositives => _truePositives;
+  int get trueNegatives => _trueNegatives;
 
   List<OptionSelection> get correctSelections => _correctSelections;
 
@@ -24,12 +34,32 @@ class LessonState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onCorrectSelection(OptionSelection optionSelection) {
+  void onCorrectSelection(OptionSelection optionSelection, bool? isAccurate) {
     _correctSelections.add(optionSelection);
+
+    if (isAccurate == null) {
+      return;
+    }
+
+    if (isAccurate) {
+      _truePositives++;
+    } else {
+      _trueNegatives++;
+    }
   }
 
-  void onIncorrectSelection(OptionSelection optionSelection) {
+  void onIncorrectSelection(OptionSelection optionSelection, bool? isAccurate) {
     _incorrectSelections.add(optionSelection);
+
+    if (isAccurate == null) {
+      return;
+    }
+
+    if (isAccurate) {
+      _falsePositives++;
+    } else {
+      _falseNegatives++;
+    }
   }
 
   set lessonDetail(LessonDetail? lessonDetail) {
