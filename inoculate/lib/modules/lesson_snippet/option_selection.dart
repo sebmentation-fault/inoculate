@@ -62,13 +62,15 @@ class _OptionSelectionState extends State<OptionSelection>
     if (widget.options == null) {
       // if there are no options provided, we use accurate/fake
       Widget probablyAccurate = ElevatedButton(
-        onPressed:
-            answerIndex == boolTrue ? _onCorrectSelected : _onIncorrectSelected,
+        onPressed: () {
+          answerIndex == boolTrue ? _onCorrectSelected(true) : _onIncorrectSelected(false);
+        },
         child: const Text(defaultIsAccurate),
       );
       Widget probablyFake = ElevatedButton(
-        onPressed:
-            answerIndex == boolTrue ? _onIncorrectSelected : _onCorrectSelected,
+        onPressed: () {
+          answerIndex == boolTrue ? _onIncorrectSelected(true) : _onCorrectSelected(false);
+        },
         child: const Text(defaultIsFake),
       );
 
@@ -84,13 +86,13 @@ class _OptionSelectionState extends State<OptionSelection>
       stringOptions.asMap().forEach((int index, String data) {
         if (index == answerIndex) {
           Widget option = ElevatedButton(
-            onPressed: _onCorrectSelected,
+            onPressed: () => _onCorrectSelected(null),
             child: Text(data),
           );
           options.add(option);
         } else {
           Widget option = ElevatedButton(
-            onPressed: _onIncorrectSelected,
+            onPressed: () => _onIncorrectSelected(null),
             child: Text(data),
           );
           options.add(option);
@@ -104,18 +106,18 @@ class _OptionSelectionState extends State<OptionSelection>
     // Add a "Not Sure" button if needed
     if (showNotSure) {
       Widget notSure = FilledButton(
-          onPressed: _onIncorrectSelected, child: const Text("Not Sure"));
+          onPressed: () => _onIncorrectSelected(null), child: const Text("Not Sure"),);
       options.add(notSure);
     }
   }
 
-  void _onCorrectSelected() {
-    _lessonState.onCorrectSelection(widget);
+  void _onCorrectSelected(bool? isAccurate) {
+    _lessonState.onCorrectSelection(widget, isAccurate);
     _lessonState.onNext();
   }
 
-  void _onIncorrectSelected() {
-    _lessonState.onIncorrectSelection(widget);
+  void _onIncorrectSelected(bool? isAccurate) {
+    _lessonState.onIncorrectSelection(widget, isAccurate);
 
     setState(() {
       isCardFlipped = true;

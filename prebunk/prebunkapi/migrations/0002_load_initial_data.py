@@ -123,6 +123,8 @@ def load_data(apps, schema_editor):
 
     ]
 
+    print('')
+
     for csv_dict in csv_disinformation_files:
         load_data_from_csv(csv_dict, csv_delimiter, source_url)
         path = csv_dict['path']
