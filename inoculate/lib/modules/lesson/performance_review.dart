@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/core/states/course_state.dart';
 import 'package:inoculate/core/states/lesson_state.dart';
 import 'package:inoculate/widgets/confusion_matrix.dart';
-import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 import 'package:inoculate/utils/models/lesson.dart';
 import 'package:inoculate/utils/services/lesson/post_lesson_results.dart';
+
 import 'package:provider/provider.dart';
 
 /// A widget that displays an overall review of the user's performance in the
@@ -27,6 +29,7 @@ class PerformanceReview extends StatefulWidget {
 
 class _PerformanceReviewState extends State<PerformanceReview> {
   final double _minScreenSize = navigationRailScreenWidth;
+  String _message = "Unkown.";
 
   @override
   Widget build(BuildContext context) {
@@ -37,74 +40,52 @@ class _PerformanceReviewState extends State<PerformanceReview> {
     bool hasNavBar = MediaQuery.of(context).size.width < _minScreenSize;
     double height = MediaQuery.of(context).size.height - (hasNavBar ? 100 : 60);
 
-    return FutureBuilder(
-        future: pushResults(context, lessonState),
-        builder: (BuildContext innerContext, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While the Future is in progress, show a loading indicator
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: MarkdownBody(
+              data: "# Performance Review\n\n${getMessage(lessonState)}\n\nYou had ${lessonState.correctSelections.length} correct selections and ${lessonState.incorrectSelections.length} incorrect selections.",
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+            ),
+          ),
+        ),
+        ConfusionMatrix(
+            lessonState.truePositives,
+            lessonState.falsePositives,
+            lessonState.trueNegatives,
+            lessonState.falseNegatives),
+        const SizedBox(height: 24,),
+        FutureBuilder<bool>(
+          future: pushResults(context),
+          builder: (innerContext, snapshot) {
+            bool isLoading = snapshot.connectionState == ConnectionState.waiting;
+            Widget errorWidget = Container();
+            if (isLoading) {
+              errorWidget = const Row(children: [CircularProgressIndicator(), Text('Saving results...')],);
+            } else if (snapshot.hasError || (snapshot.hasData && !snapshot.data!)) {
+              errorWidget = Row(
+                children: [
+                  const Icon(Icons.warning, color: Colors.red),
+                  Text('Error saving results. Reason: $_message'),
+                ],
+              );
+            } 
             return Column(
               children: [
-                Center(
-                    child: Text(
-                        "There was an error saving your results: ${snapshot.error}")),
-                const SizedBox(height: 16),
                 ElevatedButton(
-                    onPressed: () => exitLesson(innerContext),
-                    child: const Text("Exit Lesson")),
-              ],
-            );
-          } else if (snapshot.hasData && snapshot.data == false) {
-            return Column(
-              children: [
-                const Center(
-                    child: Text("There was an error saving your results.")),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                    onPressed: () => exitLesson(innerContext),
-                    child: const Text("Exit Lesson")),
-              ],
-            );
-          }
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                constraints: BoxConstraints(
-                    maxWidth: width - (32.0 + (hasNavBar ? 0 : 80)),
-                    maxHeight: height),
-                child: Card(
-                  margin: const EdgeInsets.all(16.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        SingleChildScrollView(
-                          child: MarkdownBody(
-                            data:
-                                "# Performance Review\n\n${getMessage(lessonState)}\n\nYou had ${lessonState.correctSelections.length} correct selections and ${lessonState.incorrectSelections.length} incorrect selections.",
-                            styleSheet:
-                                MarkdownStyleSheet.fromTheme(Theme.of(context)),
-                          ),
-                        ),
-                        ConfusionMatrix(
-                            lessonState.truePositives,
-                            lessonState.falsePositives,
-                            lessonState.trueNegatives,
-                            lessonState.falseNegatives),
-                      ],
-                    ),
-                  ),
+                  onPressed: isLoading ? null : () => exitLesson(innerContext),
+                  child: const Text("Exit Lesson"),
                 ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                  onPressed: () => exitLesson(context),
-                  child: const Text("Exit Lesson")),
-            ],
-          );
-        });
+                const SizedBox(height: 24,),
+                errorWidget,
+                const SizedBox(height: 24,),
+              ],
+            );
+          },
+        ),
+      ],
+    );
   }
 
   String getMessage(LessonState lessonState) {
@@ -119,31 +100,43 @@ class _PerformanceReviewState extends State<PerformanceReview> {
     }
   }
 
-  Future<bool> pushResults(
-      BuildContext context, LessonState lessonState) async {
+  Future<bool> pushResults(BuildContext context) async {
     User? user = Provider.of<User?>(context, listen: false);
+    LessonState lessonState = Provider.of<LessonState>(context, listen: false);
 
     if (user == null) {
+      _message = "Invalid user";
       return false;
     }
 
     LessonDetail? lessonDetail = lessonState.lessonDetail;
 
     if (lessonDetail == null) {
+      _message = "Lesson is null";
       return false;
     }
 
+    int result;
+
     try {
-      await pushLessonResults(
+      result = await pushLessonResults(
           user,
           lessonDetail.lessonId,
           lessonDetail.tacticId,
           lessonState.correctSelections,
           lessonState.incorrectSelections);
-    } on Exception {
+    } catch (_) {
+      _message = "Exception encountered";
       return false;
     }
 
+    switch (result) {
+      case 401:
+        _message = "Unauthorised - cannot save result";
+        break;
+    }
+
+    _message = "Success";
     return true;
   }
 

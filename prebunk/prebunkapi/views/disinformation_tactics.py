@@ -54,10 +54,15 @@ def get_recommended_tactic(request) -> Response:
 
     most_recent_tactic = get_most_recent_tactic(user)
 
-    # If there is no most recent tactic, get a recommend a random one
+    # If there is no most recent tactic, recommend a random one
     if most_recent_tactic is None:
-        list_tactis = list_disinformation_tactics()
-        random_tactic = sample(list_tactis, 1)[0]
-        return Response(random_tactic, status=status.HTTP_200_OK)
+        random_tactic = DisinformationTacticModel.objects.order_by('?').first()
+        if random_tactic is not None:
+            serializer = DisinformationTacticSerializer(random_tactic, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "No disinformation tactics available."}, status=status.HTTP_418_IM_A_TEAPOT)
 
-    return Response(most_recent_tactic, status=status.HTTP_200_OK)
+    serializer = DisinformationTacticSerializer(most_recent_tactic, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+

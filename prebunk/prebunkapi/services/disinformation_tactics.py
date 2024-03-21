@@ -91,6 +91,7 @@ def get_most_recent_tactic(user: User) -> DisinformationTacticModel | None:
 
         return most_recent_lesson.disinformation_tactic
 
-    finally:
+    except Exception as e:
+
         return None
 

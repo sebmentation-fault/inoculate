@@ -36,3 +36,7 @@ String get getCoursesApi {
 String getCourseAPI(int id) {
   return "$prebunkApiBase/disinformation_tactics/$id";
 }
+
+String get getRecommendedCourseApi {
+  return "$prebunkApiBase/disinformation_tactics/recommended";
+}

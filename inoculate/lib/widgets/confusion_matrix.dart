@@ -24,7 +24,7 @@ class ConfusionMatrix extends StatelessWidget {
     double fnIntensity = falseNegativeCount / total;
     return Column(
       children: [
-        const Text("Confusion Matrix Visualization"),
+        const Text("Confusion Matrix"),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

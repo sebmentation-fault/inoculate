@@ -11,6 +11,7 @@ import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 import 'package:inoculate/utils/helpers/get_auth_header.dart';
+import 'package:inoculate/utils/models/lesson.dart';
 import 'dart:convert';
 
 import 'package:provider/provider.dart';
@@ -21,8 +22,8 @@ import 'package:provider/provider.dart';
 /// * the firebase user object
 /// * the disinformation tactic ID
 ///
-/// Returns: a list of lesson snippets
-Future<List<Widget>> getLesson(
+/// Returns: a record with the lesson detail and the list of lesson snippets
+Future<(LessonDetail, List<Widget>)?> getLesson(
     BuildContext context, User user, int disinformationTacticId) async {
   Map<String, String> headers = await getAuthorizationHeader(user);
 
@@ -41,10 +42,12 @@ Future<List<Widget>> getLesson(
       String description = body['tactic_description'];
       List lesson = body['lesson'];
 
+      LessonDetail detail = LessonDetail(body['tactic_id'], body['lesson_id'], body['general_difficulty']);
+
       // ignore: use_build_context_synchronously
-      return [buildPreview(name, description)] + buildLesson(context, lesson);
+      return (detail, [buildPreview(name, description)] + buildLesson(context, lesson));
     default:
-      return [];
+      return null;
   }
 }
 
@@ -83,7 +86,7 @@ Widget buildPreview(String tacticName, String tacticDescription) {
   return Column(
     children: [
       InformationCard(
-        data: "# $tacticName\n\n$tacticDescription",
+        data: "# Next Lesson:\n\n---\n\n## $tacticName\n\n$tacticDescription",
       ),
       Builder(builder: ((context) {
         LessonState state = Provider.of<LessonState>(context, listen: false);

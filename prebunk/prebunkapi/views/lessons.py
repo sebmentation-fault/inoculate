@@ -5,6 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from prebunkapi.models.modles import DisinformationTacticModel, LessonModel, OptionSelectionModel, \
     TacticExplainationModel
 from prebunkapi.services import get_user_token
+from prebunkapi.services import lessons
 from prebunkapi.services.lessons import get_recommended_difficulty_for_tactic, get_lesson_around_difficulty
 
 
@@ -68,60 +69,67 @@ def get_lesson(request, tactic_id) -> Response:
     recommended_difficulty = get_recommended_difficulty_for_tactic(user, tactic_id)
 
     (lesson_model, tactic_explanations, option_selection_lessons) = get_lesson_around_difficulty(user, tactic_id,
-                                                                                                 recommended_difficulty)
-    lesson = []
+                                                                                                recommended_difficulty)
 
-    # Populate the lesson (list of json), which has 1 tactic explainations, followed by 2 option selections lessons
-    for tactic_explanation in tactic_explanations:
-        o1 = option_selection_lessons.pop()
-        o1 = OptionSelectionModel.objects.filter(id=o1.option_selection.id).first()
-        o2 = option_selection_lessons.pop()
-        o2 = OptionSelectionModel.objects.filter(id=o2.option_selection.id).first()
+ 
+    def tactic_explaination_json(te: TacticExplainationModel):
+        """
+        Helper function, return a JSON object for the tactic explaination.
+        """
+        return {
+            'type': 'tactic_explaination',
+            'id': te.id,
+            'body': te.explaination,
+        }
 
-        def tactic_explaination_json(te: TacticExplainationModel):
-            """
-            Helper function, return a JSON object for the tactic explaination.
-            """
+    def option_selection_json(os: OptionSelectionModel):
+        """
+        Helper function, return a JSON object for the option selection.
+
+        If the option selection correct/incorrect is "Fake" or "Accurate", then we return is_accurate with flag,
+        otherwise we return the entire correct/incorrect message.
+        """
+        if os.correct_option == "Fake" or os.correct_option == "Accurate":
             return {
-                'type': 'tactic_explaination',
-                'id': te.id,
-                'body': te.explaination,
+                'type': 'option_selection',
+                'id': os.id,
+                'body': os.information,
+                'is_accurate': os.correct_option == "Accurate",
+                'not_sure': os.display_not_sure,
+                'real_difficulty': os.real_difficulty,
+                'opportunity_cost': os.opportunity_cost,
+                'feedback': os.feedback,
+            }
+        else:
+            return {
+                'type': 'option_selection',
+                'id': os.id,
+                'body': os.information,
+                'correct': os.correct_option,
+                'incorrect': os.incorrect_option,
+                'not_sure': os.display_not_sure,
+                'real_difficulty': os.real_difficulty,
+                'opportunity_cost': os.opportunity_cost,
+                'feedback': os.feedback,
             }
 
-        def option_selection_json(os: OptionSelectionModel):
-            """
-            Helper function, return a JSON object for the option selection.
+    lesson = []
 
-            If the option selection correct/incorrect is "Fake" or "Accurate", then we return is_accurate with flag,
-            otherwise we return the entire correct/incorrect message.
-            """
-            if os.correct_option == "Fake" or os.correct_option == "Accurate":
-                return {
-                    'type': 'option_selection',
-                    'id': os.id,
-                    'body': os.information,
-                    'is_accurate': os.correct_option == "Accurate",
-                    'not_sure': os.display_not_sure,
-                    'real_difficulty': os.real_difficulty,
-                    'opportunity_cost': os.opportunity_cost,
-                    'feedback': os.feedback,
-                }
-            else:
-                return {
-                    'type': 'option_selection',
-                    'id': os.id,
-                    'body': os.information,
-                    'correct': os.correct_option,
-                    'incorrect': os.incorrect_option,
-                    'not_sure': os.display_not_sure,
-                    'real_difficulty': os.real_difficulty,
-                    'opportunity_cost': os.opportunity_cost,
-                    'feedback': os.feedback,
-                }
+    # Populate the lesson (list of json), which has 1 tactic explainations, followed by 2 option selections lessons (repeatedly)
 
-        lesson.append(tactic_explaination_json(tactic_explanation))
-        lesson.append(option_selection_json(o1))
-        lesson.append(option_selection_json(o2))
+    flag: int = 0
+
+    tactic_explanations = list(tactic_explanations)
+
+    for option_selection in option_selection_lessons:
+        if flag % 3 == 0:
+            te = tactic_explanations.pop()
+            lesson.append(tactic_explaination_json(te))
+
+        op = OptionSelectionModel.objects.filter(id=option_selection.option_selection.id).first()
+        lesson.append(option_selection_json(op))
+
+        flag += 1
 
     disinformation_tactic = DisinformationTacticModel.objects.filter(id=tactic_id).first()
 
@@ -133,8 +141,6 @@ def get_lesson(request, tactic_id) -> Response:
         'general_difficulty': lesson_model.average_difficulty,
         'lesson': lesson,
     }
-
-    print(f'Response: {response}')
 
     return Response(response, status=200)
 
