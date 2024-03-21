@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:inoculate/modules/course/course_preview.dart';
 import 'package:inoculate/modules/lesson/lesson.dart';
 import 'package:inoculate/utils/models/course.dart';
 
@@ -27,15 +28,19 @@ class _CourseState extends State<Course> {
     return showLesson == false
         ? Column(
             children: [
-              Text(widget._courseDetail.name),
-              MarkdownBody(data: widget._courseDetail.description),
+              CoursePreview(widget._courseDetail),
               ElevatedButton(
                   onPressed: () {
                     setState(() {
                       showLesson = true;
                     });
                   },
-                  child: const Text("Go to Lesson"))
+                  child: const Row(
+                    children: [
+                      Text("Start Lesson"),
+                    ]
+                  ),
+                )
             ],
           )
         : Lesson(widget._courseDetail.id);

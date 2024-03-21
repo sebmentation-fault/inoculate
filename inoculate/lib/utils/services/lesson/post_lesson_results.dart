@@ -14,7 +14,7 @@ import 'package:inoculate/utils/helpers/get_auth_header.dart';
 /// * the disinformation tactic ID
 /// * the correct selections
 /// * the incorrect selections
-Future<void> pushLessonResults(
+Future<int> pushLessonResults(
     User user,
     int lessonId,
     int disinformationTacticId,
@@ -41,7 +41,9 @@ Future<void> pushLessonResults(
   // Check status code
   switch (response.statusCode) {
     case 200:
-      return;
+      return 200;
+    case 401:
+      return 401;
     default:
       throw Exception('Failed to post lesson results');
   }

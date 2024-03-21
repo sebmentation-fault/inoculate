@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:inoculate/core/states/lesson_state.dart';
 import 'package:inoculate/modules/lesson/performance_review.dart';
+import 'package:inoculate/utils/models/lesson.dart';
 import 'package:inoculate/utils/services/lesson/get_lesson.dart';
 import 'package:provider/provider.dart';
 
@@ -19,16 +20,16 @@ class Lesson extends StatefulWidget {
 }
 
 class _LessonState extends State<Lesson> {
-  late Future<List<Widget>?> _lessonSnippets;
+  late Future<(LessonDetail, List<Widget>)?> _lessonContent;
   LessonState? _lessonState;
 
   @override
   void initState() {
     super.initState();
-    _lessonSnippets = _fetchLesson();
+    _lessonContent = _fetchLesson();
   }
 
-  Future<List<Widget>?> _fetchLesson() async {
+  Future<(LessonDetail, List<Widget>)?> _fetchLesson() async {
     User? user = Provider.of<User?>(context, listen: false);
 
     if (user == null) {
@@ -44,8 +45,8 @@ class _LessonState extends State<Lesson> {
       providers: [
         ChangeNotifierProvider(create: (notifierContext) => LessonState()),
       ],
-      child: FutureBuilder<List<Widget>?>(
-        future: _lessonSnippets,
+      child: FutureBuilder<(LessonDetail, List<Widget>)?>(
+        future: _lessonContent,
         builder: (innerContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While the Future is in progress, show a loading indicator
@@ -54,7 +55,7 @@ class _LessonState extends State<Lesson> {
             // If we run into an error, display it to the user
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData &&
-              (snapshot.data == null || snapshot.data!.isEmpty)) {
+              (snapshot.data == null)) {
             // The API call was successful but the lesson count is 0
             return const Center(
               child:
@@ -68,7 +69,10 @@ class _LessonState extends State<Lesson> {
             // if lessonState.currentIndex > last elem, then display lesson is
             // complete
 
-            List<Widget> snippets = snapshot.data!;
+            LessonDetail detail = snapshot.data!.$1;
+            _lessonState?.lessonDetail = detail;
+
+            List<Widget> snippets = snapshot.data!.$2;
 
             // Specify the ValueKey
             // default VK is the widget type - which does not update when there
