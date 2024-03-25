@@ -68,10 +68,10 @@ class _CoursesState extends State<Courses> {
                   ? Center(
                       child: Container(
                         constraints: const BoxConstraints(
-                          maxWidth: 500,
+                          maxWidth: 350,
                           maxHeight: 400,
                           minHeight: 150,
-                          minWidth: 500,
+                          minWidth: 350,
                         ),
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
