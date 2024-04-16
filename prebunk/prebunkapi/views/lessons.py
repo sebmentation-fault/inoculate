@@ -71,7 +71,6 @@ def get_lesson(request, tactic_id) -> Response:
     (lesson_model, tactic_explanations, option_selection_lessons) = get_lesson_around_difficulty(user, tactic_id,
                                                                                                 recommended_difficulty)
 
- 
     def tactic_explaination_json(te: TacticExplainationModel):
         """
         Helper function, return a JSON object for the tactic explaination.
@@ -79,7 +78,7 @@ def get_lesson(request, tactic_id) -> Response:
         return {
             'type': 'tactic_explaination',
             'id': te.id,
-            'body': te.explaination,
+            'body': str(te.explaination).replace("'", ""),
         }
 
     def option_selection_json(os: OptionSelectionModel):
@@ -93,24 +92,24 @@ def get_lesson(request, tactic_id) -> Response:
             return {
                 'type': 'option_selection',
                 'id': os.id,
-                'body': os.information,
+                'body': str(os.information).replace("'", ""),
                 'is_accurate': os.correct_option == "Accurate",
                 'not_sure': os.display_not_sure,
                 'real_difficulty': os.real_difficulty,
                 'opportunity_cost': os.opportunity_cost,
-                'feedback': os.feedback,
+                'feedback': str(os.feedback).replace("'", ""),
             }
         else:
             return {
                 'type': 'option_selection',
                 'id': os.id,
-                'body': os.information,
+                'body': str(os.information).replace("'", ""),
                 'correct': os.correct_option,
                 'incorrect': os.incorrect_option,
                 'not_sure': os.display_not_sure,
                 'real_difficulty': os.real_difficulty,
                 'opportunity_cost': os.opportunity_cost,
-                'feedback': os.feedback,
+                'feedback': str(os.feedback).replace("'", ""),
             }
 
     lesson = []
