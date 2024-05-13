@@ -1,5 +1,7 @@
 const String appName = "Inoculate";
 
+const bool localFirebase = true;
+
 /// Constant that defines at what screen width the bottom navigation bar should
 /// become a navigation rail
 const double navigationRailScreenWidth = 640;

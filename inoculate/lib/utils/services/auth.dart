@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:inoculate/constants/app_constants.dart';
 
 /// Authentication service that enables support for signing up/registering
 /// with email/password, or anonomously as a guest account.
@@ -16,8 +17,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// The service provdes methods for accessing a steam on the user credentials.
 ///
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth;
   late UserCredential _userCredential;
+
+  AuthService() : _auth = FirebaseAuth.instance {
+    if (localFirebase) {
+      _auth.useAuthEmulator('localhost', 9099);
+    }
+  }
 
   /// Set up a `Stream` that notifies our `AuthWrapper` or other components
   /// when the user successfully logs in/out of their account.

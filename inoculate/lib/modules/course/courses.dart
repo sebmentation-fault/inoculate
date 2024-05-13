@@ -69,8 +69,8 @@ class _CoursesState extends State<Courses> {
                       child: Container(
                         constraints: const BoxConstraints(
                           maxWidth: 350,
-                          maxHeight: 400,
-                          minHeight: 150,
+                          maxHeight: 800,
+                          minHeight: 400,
                           minWidth: 350,
                         ),
                         child: ListView.builder(

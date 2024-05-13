@@ -45,7 +45,7 @@ Future<(LessonDetail, List<Widget>)?> getLesson(
       LessonDetail detail = LessonDetail(body['tactic_id'], body['lesson_id'], body['general_difficulty']);
 
       // ignore: use_build_context_synchronously
-      return (detail, [buildPreview(name, description)] + buildLesson(context, lesson));
+      return (detail, [buildPreview(fixString(name), fixString(description))] + buildLesson(context, lesson));
     default:
       return null;
   }
@@ -82,6 +82,11 @@ List<Widget> buildLesson(BuildContext context, List body) {
   return list;
 }
 
+/// Sometimes the JSON string has strange characters. This removes it.
+String fixString(String input) {
+  return input.replaceAll(r'â..', '');
+}
+
 Widget buildPreview(String tacticName, String tacticDescription) {
   return Column(
     children: [
@@ -101,10 +106,10 @@ Widget buildPreview(String tacticName, String tacticDescription) {
 OptionSelection? buildOptionSelection(
     BuildContext context, Map<String, dynamic> item) {
   int id = item['id'];
-  String information = item['body'];
+  String information = fixString(item['body']);
   bool showNotSure = item['not_sure'];
   int answerIndex;
-  String feedback = item['feedback'];
+  String feedback = fixString(item['feedback']);
 
   List<String>? options;
 
@@ -151,7 +156,7 @@ TacticExplaination? buildTacticExplaination(
     BuildContext context, Map<String, dynamic> item) {
   if (item.containsKey('body')) {
     return TacticExplaination(
-      tacticExplaination: item['body'],
+      tacticExplaination: fixString(item['body']),
     );
   } else {
     // TODO: log the error

@@ -7,13 +7,17 @@ from rest_framework import exceptions
 
 from firebase_admin import auth, initialize_app, credentials
 
+from .constants import LOCAL_FIREBASE
+
+if LOCAL_FIREBASE:
+    os.environ["FIREBASE_AUTH_EMULATOR_HOST"] = "localhost:9099"
+
 # initialises the firebase sdk when this file is imported
 try:
     firebase_sdk = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 
     creds = credentials.Certificate(firebase_sdk)
-
-    firebase_app = initialize_app()
+    firebase_app = initialize_app(creds)
 except ValueError:
     raise exceptions.AuthenticationFailed('The Firebase SDK could not be initialized')
 

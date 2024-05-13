@@ -42,6 +42,7 @@ class _PerformanceReviewState extends State<PerformanceReview> {
 
     return Column(
       children: [
+        const SizedBox(height: 48,),
         Expanded(
           child: SingleChildScrollView(
             child: MarkdownBody(

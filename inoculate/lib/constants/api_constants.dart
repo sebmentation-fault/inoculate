@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 String get apiBase {
   // If testing mode then use localhost, otherwise use the backend server
-  return (kReleaseMode || !kDebugMode)
+  return false //(kReleaseMode || !kDebugMode
       ? "http://209.38.160.225:8000"
       : "http://localhost:8000";
 }
