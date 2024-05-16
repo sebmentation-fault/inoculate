@@ -20,9 +20,10 @@ class CourseCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      constraints: BoxConstraints(
-          maxWidth: width - (32.0 + (hasNavBar ? 0 : 80)), maxHeight: height),
-      child: Card(
+      //constraints: BoxConstraints(
+      //    maxWidth: width - (32.0 + (hasNavBar ? 0 : 80)), maxHeight: height),
+      child: Expanded(
+        child: Card(
         margin: const EdgeInsets.all(16.0),
         child: RawMaterialButton(
           onPressed: () {
@@ -33,10 +34,10 @@ class CourseCard extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(_courseDetail.name),
+            child: Text(_courseDetail.name, style: const TextStyle(fontSize: 24),),
           ),
         ),
-      ),
+      ), ),
     );
   }
 }

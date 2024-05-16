@@ -64,10 +64,14 @@ class _RecommendedCourseState extends State<RecommendedCourse> {
               CourseDetail detail = snapshot.data!;
 
               return (_courseState!.courseDetail == null)
-                ? Course(detail) 
+                ? Column(
+                    children: [
+                      const SizedBox(height: 24,),
+                      Course(detail),
+                    ],)
                 : ElevatedButton(
                   onPressed: getNewLesson, 
-                  child: const Text("Get New Recommended Lesson"),
+                  child: const Text("Try again"),
               );
             } else {
               // Unknown error

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/constants/markdown_styles.dart';
 
 /// Class that encapsulates displaying information.
 ///
@@ -23,10 +24,7 @@ class _InformationCardState extends State<InformationCard> {
     bool hasNavBar = MediaQuery.of(context).size.width < _minScreenSize;
 
     double height = MediaQuery.of(context).size.height - (hasNavBar ? 100 : 60);
-
-    // get the maximum width availiable in widget
-
-
+    
     return Container(
       padding: const EdgeInsets.all(16),
       constraints: BoxConstraints(
@@ -38,7 +36,7 @@ class _InformationCardState extends State<InformationCard> {
           child: SingleChildScrollView(
             child: MarkdownBody(
               data: widget.data,
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+              styleSheet: getMarkdownStyle(),
             ),
           ),
         ),

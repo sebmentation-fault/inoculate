@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/constants/markdown_styles.dart';
 import 'package:inoculate/core/states/lesson_state.dart';
 import 'package:provider/provider.dart';
 
@@ -148,7 +149,7 @@ class _OptionSelectionState extends State<OptionSelection>
               child: SingleChildScrollView(
                 child: MarkdownBody(
                   data: isCardFlipped ? feedbackBody : information,
-                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+                  styleSheet: getMarkdownStyle(),
                 ),
               ),
             ),

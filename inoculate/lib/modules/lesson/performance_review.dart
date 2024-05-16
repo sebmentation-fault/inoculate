@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:inoculate/constants/app_constants.dart';
+import 'package:inoculate/constants/markdown_styles.dart';
 import 'package:inoculate/core/states/course_state.dart';
 import 'package:inoculate/core/states/lesson_state.dart';
 import 'package:inoculate/widgets/confusion_matrix.dart';
@@ -40,22 +41,28 @@ class _PerformanceReviewState extends State<PerformanceReview> {
     bool hasNavBar = MediaQuery.of(context).size.width < _minScreenSize;
     double height = MediaQuery.of(context).size.height - (hasNavBar ? 100 : 60);
 
+    bool showLesson = false;
+
     return Column(
       children: [
         const SizedBox(height: 48,),
-        Expanded(
-          child: SingleChildScrollView(
+        /*Expanded(
+          child: 
+        ),*/
+        SingleChildScrollView(
+            padding: const EdgeInsets.only(left: 30.0),
             child: MarkdownBody(
               data: "# Performance Review\n\n${getMessage(lessonState)}\n\nYou had ${lessonState.correctSelections.length} correct selections and ${lessonState.incorrectSelections.length} incorrect selections.",
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+              styleSheet: getMarkdownStyle(),
             ),
           ),
-        ),
-        ConfusionMatrix(
+          const SizedBox(height: 96,),
+          ConfusionMatrix(
             lessonState.truePositives,
             lessonState.falsePositives,
             lessonState.trueNegatives,
-            lessonState.falseNegatives),
+            lessonState.falseNegatives
+          ),
         const SizedBox(height: 24,),
         FutureBuilder<bool>(
           future: pushResults(context),
@@ -85,6 +92,7 @@ class _PerformanceReviewState extends State<PerformanceReview> {
             );
           },
         ),
+        //const Expanded(child: SizedBox(),)
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/core/states/course_state.dart';
 import 'package:inoculate/modules/course/course.dart';
 import 'package:inoculate/modules/course/course_card.dart';
@@ -18,6 +19,7 @@ class Courses extends StatefulWidget {
 class _CoursesState extends State<Courses> {
   late Future<List<CourseDetail>> _courses;
   CourseState? _courseState;
+  final double _minScreenSize = navigationRailScreenWidth;
 
   @override
   void initState() {
@@ -37,6 +39,10 @@ class _CoursesState extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    bool hasNavBar = MediaQuery.of(context).size.width < _minScreenSize;
+    double height = MediaQuery.of(context).size.height - (hasNavBar ? 100 : 60);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (notifierContext) => CourseState())
@@ -66,9 +72,9 @@ class _CoursesState extends State<Courses> {
 
               return (_courseState!.courseDetail == null)
                   ? Center(
-                      child: Container(
+                      child: Expanded(child:  Container(
                         constraints: const BoxConstraints(
-                          maxWidth: 350,
+                          maxWidth: 600,
                           maxHeight: 800,
                           minHeight: 400,
                           minWidth: 350,
@@ -81,9 +87,11 @@ class _CoursesState extends State<Courses> {
                             return CourseCard(details[index]);
                           },
                         ),
-                      ),
+                      ), ),
                     )
-                  : Course(_courseState!.courseDetail!);
+                  : Column(children: [ 
+                    const SizedBox(height: 48,),
+                    Course(_courseState!.courseDetail!, showBack: true,)],);
             } else {
               // Unknown error
               return const Center(

@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:inoculate/constants/markdown_styles.dart';
 
 /// Widget that shows a confusion matrix
 /// 
@@ -13,6 +15,8 @@ class ConfusionMatrix extends StatelessWidget {
   final int trueNegativeCount;
   final int falseNegativeCount;
 
+  final double squareSize = 200;
+
   const ConfusionMatrix(this.truePositiveCount, this.falsePositiveCount, this.trueNegativeCount, this.falseNegativeCount, {super.key});
 
   @override
@@ -24,23 +28,26 @@ class ConfusionMatrix extends StatelessWidget {
     double fnIntensity = falseNegativeCount / total;
     return Column(
       children: [
-        const Text("Confusion Matrix"),
+        MarkdownBody(
+          data: "# Confusion Matrix", 
+          styleSheet: getMarkdownStyle(),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // True Positive
             Container(
-              width: 100,
-              height: 100,
+              width: squareSize,
+              height: squareSize,
               color: Colors.green.withOpacity(tpIntensity),
-              child: Center(child: Text("$truePositiveCount TP")),
+              child: Center(child: Text("$truePositiveCount TP", style: const TextStyle(fontSize: 24),)),
             ),
             // False Negative
             Container(
-              width: 100,
-              height: 100,
+              width: squareSize,
+              height: squareSize,
               color: Colors.red.withOpacity(fnIntensity),
-              child: Center(child: Text("$falseNegativeCount FN")),
+              child: Center(child: Text("$falseNegativeCount FN", style: const TextStyle(fontSize: 24),)),
             ),
           ],
         ),
@@ -49,20 +56,22 @@ class ConfusionMatrix extends StatelessWidget {
           children: [
             // False Positive
             Container(
-              width: 100,
-              height: 100,
+              width: squareSize,
+              height: squareSize,
               color: Colors.red.withOpacity(fpIntensity),
-              child: Center(child: Text("$falsePositiveCount FP")),
+              child: Center(child: Text("$falsePositiveCount FP", style: const TextStyle(fontSize: 24),)),
             ),
             // True Negative
             Container(
-              width: 100,
-              height: 100,
+              width: squareSize,
+              height: squareSize,
               color: Colors.green.withOpacity(tnIntensity),
-              child: Center(child: Text("$trueNegativeCount TN")),
+              child: Center(child: Text("$trueNegativeCount TN", style: const TextStyle(fontSize: 24),)),
             ),
           ],
         ),
+        const SizedBox(height: 48,),
+        const MarkdownBody(data: "Key:\n\n* TP - **correctly** selected an accurate headline\n\n* FP - **incorrectly** selected an accurate headline\n\n* TN - **correctly** selected an fake headline\n\n* TP - **incorrectly** selected an accurate headline"),
       ],
     );
   }

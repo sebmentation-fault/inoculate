@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
         StreamProvider<AlertDialogueDetail?>.value(
           value: alertStreamController.stream,
           initialData: null,
-        )
+        ),
+
       ],
       child: MaterialApp(
         title: appName,

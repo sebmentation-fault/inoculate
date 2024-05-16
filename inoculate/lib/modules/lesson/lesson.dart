@@ -68,7 +68,6 @@ class _LessonState extends State<Lesson> {
 
             // if lessonState.currentIndex > last elem, then display lesson is
             // complete
-
             LessonDetail detail = snapshot.data!.$1;
             _lessonState?.lessonDetail = detail;
 

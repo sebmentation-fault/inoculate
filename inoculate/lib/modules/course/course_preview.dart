@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:inoculate/core/states/course_state.dart';
 
 import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 import 'package:inoculate/utils/models/course.dart';
+import 'package:provider/provider.dart';
 
 class CoursePreview extends StatelessWidget {
   final CourseDetail _courseDetail;

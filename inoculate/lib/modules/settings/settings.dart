@@ -12,18 +12,25 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(child:
-     ElevatedButton(
-      onPressed: () async {
-        try {
-          await AuthService()
-            .signOut();
-        } catch (AuthenticationException) {
-          // TODO: show dialogue
-        }
-      }, 
-      child: const Text("Sign Out"),
-     ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [ 
+        const SizedBox(width: 24,),
+        Form(
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+                await AuthService()
+                  .signOut();
+              } catch (_) {
+                // TODO: show dialogue
+              }
+            }, 
+            child: const Text("Sign Out"),
+          ),
+        ),
+      ], 
     );
   }
 }

@@ -6,15 +6,11 @@ import 'package:http/http.dart';
 import 'package:inoculate/constants/api_constants.dart';
 import 'package:inoculate/constants/app_constants.dart';
 import 'package:inoculate/core/error/popup.dart';
-import 'package:inoculate/core/states/lesson_state.dart';
-import 'package:inoculate/modules/lesson_snippet/lesson_snippet.dart';
 import 'package:inoculate/modules/lesson_snippet/option_selection.dart';
 import 'package:inoculate/modules/lesson_snippet/tactic_explaination.dart';
 import 'package:inoculate/utils/helpers/get_auth_header.dart';
 import 'package:inoculate/utils/models/lesson.dart';
 import 'dart:convert';
-
-import 'package:provider/provider.dart';
 
 /// Gets a `Lesson`.
 ///
@@ -45,7 +41,7 @@ Future<(LessonDetail, List<Widget>)?> getLesson(
       LessonDetail detail = LessonDetail(body['tactic_id'], body['lesson_id'], body['general_difficulty']);
 
       // ignore: use_build_context_synchronously
-      return (detail, [buildPreview(fixString(name), fixString(description))] + buildLesson(context, lesson));
+      return (detail, buildLesson(context, lesson));
     default:
       return null;
   }
@@ -87,24 +83,9 @@ String fixString(String input) {
   return input.replaceAll(r'â..', '');
 }
 
-Widget buildPreview(String tacticName, String tacticDescription) {
-  return Column(
-    children: [
-      InformationCard(
-        data: "# Next Lesson:\n\n---\n\n## $tacticName\n\n$tacticDescription",
-      ),
-      Builder(builder: ((context) {
-        LessonState state = Provider.of<LessonState>(context, listen: false);
-
-        return ElevatedButton(
-            onPressed: () => state.onNext(), child: const Text("Next"));
-      }))
-    ],
-  );
-}
-
 OptionSelection? buildOptionSelection(
     BuildContext context, Map<String, dynamic> item) {
+
   int id = item['id'];
   String information = fixString(item['body']);
   bool showNotSure = item['not_sure'];
